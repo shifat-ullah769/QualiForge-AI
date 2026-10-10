@@ -25,6 +25,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'phone',
+        'profile_photo_path',
+        'job_title',
+        'department',
     ];
 
     /**
@@ -50,7 +54,7 @@ class User extends Authenticatable
             'role' => UserRole::class,
         ];
     }
-    
+
     public function hasRole(UserRole $role): bool
     {
         return $this->role === $role;
