@@ -121,6 +121,8 @@
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
                                 required
                             >
+                                <option value="">Select Role</option>
+
                                 <option value="system_administrator"
                                     {{ old('role') === 'system_administrator' ? 'selected' : '' }}>
                                     System Administrator
@@ -148,6 +150,39 @@
                             </select>
 
                             @error('role')
+                                <p class="mt-1 text-sm text-red-600">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        {{-- Company --}}
+                        <div class="mb-4">
+                            <label
+                                for="company_id"
+                                class="block font-medium text-sm text-gray-700"
+                            >
+                                Company
+                            </label>
+
+                            <select
+                                id="company_id"
+                                name="company_id"
+                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+                            >
+                                <option value="">No Company</option>
+
+                                @foreach ($companies as $company)
+                                    <option
+                                        value="{{ $company->id }}"
+                                        {{ old('company_id') == $company->id ? 'selected' : '' }}
+                                    >
+                                        {{ $company->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('company_id')
                                 <p class="mt-1 text-sm text-red-600">
                                     {{ $message }}
                                 </p>

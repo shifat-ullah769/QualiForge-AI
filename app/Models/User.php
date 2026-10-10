@@ -9,6 +9,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Company;
 
 class User extends Authenticatable
 {
@@ -21,15 +22,16 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'phone',
-        'profile_photo_path',
-        'job_title',
-        'department',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'phone',
+    'profile_photo_path',
+    'job_title',
+    'department',
+    'company_id',
+];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -58,5 +60,10 @@ class User extends Authenticatable
     public function hasRole(UserRole $role): bool
     {
         return $this->role === $role;
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

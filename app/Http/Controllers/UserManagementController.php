@@ -7,19 +7,30 @@ use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 
 class UserManagementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $user = $request->user();
+
+        if ($user->hasRole(UserRole::SYSTEM_ADMINISTRATOR)) {
+            $users = User::all();
+        } else {
+            $users = User::where('company_id', $user->company_id)->get();
+        }
 
         return view('users.index', compact('users'));
     }
 
     public function create()
     {
-        return view('users.create');
+        $companies = \App\Models\Company::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return view('users.create', compact('companies'));
     }
 
     public function store(Request $request)
@@ -45,9 +56,15 @@ class UserManagementController extends Controller
             'role' => [
                 'required',
                 'string',
-                \Illuminate\Validation\Rule::in(
+                Rule::in(
                     array_column(UserRole::cases(), 'value')
                 ),
+            ],
+
+            'company_id' => [
+                'nullable',
+                'integer',
+                'exists:companies,id',
             ],
         ]);
 
@@ -56,6 +73,7 @@ class UserManagementController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'company_id' => $request->company_id,
         ]);
 
         return redirect()

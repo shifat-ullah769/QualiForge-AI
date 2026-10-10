@@ -13,7 +13,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/users', [UserManagementController::class, 'index'])
-    ->middleware(['auth', 'role:system_administrator'])
+    ->middleware(['auth', 'role:system_administrator,company_administrator'])
     ->name('users.index');
 
 Route::get('/users/create', [UserManagementController::class, 'create'])
