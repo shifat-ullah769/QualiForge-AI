@@ -54,7 +54,7 @@
                 </ul>
 
                 <div class="ms-lg-3">
-                    <a href="#" class="btn btn-outline-info">
+                    <a href="{{ route('login') }}" class="btn btn-outline-info">
                         Login
                     </a>
                 </div>
