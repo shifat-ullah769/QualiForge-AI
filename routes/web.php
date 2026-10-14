@@ -1,37 +1,133 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\CompanyManagementController;
+use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/users', [UserManagementController::class, 'index'])
-    ->middleware(['auth', 'role:system_administrator,company_administrator'])
-    ->name('users.index');
+/*
+|--------------------------------------------------------------------------
+| Authenticated Application Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/users/create', [UserManagementController::class, 'create'])
-    ->middleware(['auth', 'role:system_administrator'])
-    ->name('users.create');
+Route::middleware(['auth', 'active'])->group(function () {
 
-Route::post('/users', [UserManagementController::class, 'store'])
-    ->middleware(['auth', 'role:system_administrator'])
-    ->name('users.store');
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })
+        ->middleware('verified')
+        ->name('dashboard');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Management
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:system_administrator,company_administrator')->group(function () {
+
+        Route::get('/users', [UserManagementController::class, 'index'])
+            ->name('users.index');
+
+        Route::get('/users/create', [UserManagementController::class, 'create'])
+            ->name('users.create');
+
+        Route::post('/users', [UserManagementController::class, 'store'])
+            ->name('users.store');
+
+        Route::get('/users/{user}/edit', [UserManagementController::class, 'edit'])
+            ->name('users.edit');
+
+        Route::put('/users/{user}', [UserManagementController::class, 'update'])
+            ->name('users.update');
+
+        Route::patch('/users/{user}/toggle-status', [UserManagementController::class, 'toggleStatus'])
+            ->name('users.toggle-status');
+
+        Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])
+            ->name('users.destroy');
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Company Management
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:system_administrator,company_administrator')->group(function () {
+
+        Route::get('/companies', [CompanyManagementController::class, 'index'])
+            ->name('companies.index');
+
+        Route::get('/companies/{company}', [CompanyManagementController::class, 'show'])
+            ->name('companies.show');
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | System Administrator - Company Management
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:system_administrator')->group(function () {
+
+        Route::get('/companies/create', [CompanyManagementController::class, 'create'])
+            ->name('companies.create');
+
+        Route::post('/companies', [CompanyManagementController::class, 'store'])
+            ->name('companies.store');
+
+        Route::get('/companies/{company}/edit', [CompanyManagementController::class, 'edit'])
+            ->name('companies.edit');
+
+        Route::put('/companies/{company}', [CompanyManagementController::class, 'update'])
+            ->name('companies.update');
+
+        Route::patch('/companies/{company}/toggle-status', [CompanyManagementController::class, 'toggleStatus'])
+            ->name('companies.toggle-status');
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+
     Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])
-    ->name('profile.photo.delete');
+        ->name('profile.photo.delete');
 });
 
 
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

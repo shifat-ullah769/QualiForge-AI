@@ -22,16 +22,18 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',
-    'phone',
-    'profile_photo_path',
-    'job_title',
-    'department',
-    'company_id',
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'phone',
+        'profile_photo_path',
+        'job_title',
+        'department',
+        'company_id',
+        'is_active',
+        'deactivated_at'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -54,6 +56,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'is_active' => 'boolean',
+            'deactivated_at' => 'datetime',
         ];
     }
 

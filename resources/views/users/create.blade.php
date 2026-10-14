@@ -17,8 +17,7 @@
                         <div class="mb-4">
                             <label
                                 for="name"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Name
                             </label>
 
@@ -29,13 +28,12 @@
                                 value="{{ old('name') }}"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
                                 required
-                                autofocus
-                            >
+                                autofocus>
 
                             @error('name')
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ $message }}
-                                </p>
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
@@ -43,8 +41,7 @@
                         <div class="mb-4">
                             <label
                                 for="email"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Email
                             </label>
 
@@ -54,13 +51,12 @@
                                 name="email"
                                 value="{{ old('email') }}"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                                required
-                            >
+                                required>
 
                             @error('email')
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ $message }}
-                                </p>
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
@@ -68,8 +64,7 @@
                         <div class="mb-4">
                             <label
                                 for="password"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Password
                             </label>
 
@@ -78,13 +73,12 @@
                                 type="password"
                                 name="password"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                                required
-                            >
+                                required>
 
                             @error('password')
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ $message }}
-                                </p>
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
@@ -92,8 +86,7 @@
                         <div class="mb-4">
                             <label
                                 for="password_confirmation"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Confirm Password
                             </label>
 
@@ -102,16 +95,14 @@
                                 type="password"
                                 name="password_confirmation"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                                required
-                            >
+                                required>
                         </div>
 
                         {{-- Role --}}
                         <div class="mb-4">
                             <label
                                 for="role"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Role
                             </label>
 
@@ -119,14 +110,23 @@
                                 id="role"
                                 name="role"
                                 class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                                required
-                            >
+                                required>
+
                                 <option value="">Select Role</option>
+
+                                @if (auth()->user()->hasRole(\App\UserRole::SYSTEM_ADMINISTRATOR))
 
                                 <option value="system_administrator"
                                     {{ old('role') === 'system_administrator' ? 'selected' : '' }}>
                                     System Administrator
                                 </option>
+
+                                <option value="company_administrator"
+                                    {{ old('role') === 'company_administrator' ? 'selected' : '' }}>
+                                    Company Administrator
+                                </option>
+
+                                @elseif (auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
 
                                 <option value="company_administrator"
                                     {{ old('role') === 'company_administrator' ? 'selected' : '' }}>
@@ -147,12 +147,15 @@
                                     {{ old('role') === 'quality_manager' ? 'selected' : '' }}>
                                     Quality Manager
                                 </option>
+
+                                @endif
+
                             </select>
 
                             @error('role')
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ $message }}
-                                </p>
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
@@ -160,40 +163,36 @@
                         <div class="mb-4">
                             <label
                                 for="company_id"
-                                class="block font-medium text-sm text-gray-700"
-                            >
+                                class="block font-medium text-sm text-gray-700">
                                 Company
                             </label>
 
                             <select
                                 id="company_id"
                                 name="company_id"
-                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
-                            >
+                                class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                                @if (!auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
                                 <option value="">No Company</option>
+                                @endif
 
                                 @foreach ($companies as $company)
-                                    <option
-                                        value="{{ $company->id }}"
-                                        {{ old('company_id') == $company->id ? 'selected' : '' }}
-                                    >
-                                        {{ $company->name }}
-                                    </option>
+                                <option value="{{ $company->id }}">
+                                    {{ $company->name }}
+                                </option>
                                 @endforeach
                             </select>
 
                             @error('company_id')
-                                <p class="mt-1 text-sm text-red-600">
-                                    {{ $message }}
-                                </p>
+                            <p class="mt-1 text-sm text-red-600">
+                                {{ $message }}
+                            </p>
                             @enderror
                         </div>
 
                         {{-- Submit --}}
                         <button
                             type="submit"
-                            class="px-4 py-2 bg-gray-800 text-white rounded-md"
-                        >
+                            class="px-4 py-2 bg-gray-800 text-white rounded-md">
                             Create User
                         </button>
 
