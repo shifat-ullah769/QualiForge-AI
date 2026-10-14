@@ -79,6 +79,15 @@ class CompanyManagementController extends Controller
      */
     public function edit(\App\Models\Company $company)
     {
+        $user = request()->user();
+
+        if (
+            $user->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR) &&
+            (int) $user->company_id !== (int) $company->id
+        ) {
+            abort(403);
+        }
+
         return view('companies.edit', compact('company'));
     }
 
@@ -87,6 +96,15 @@ class CompanyManagementController extends Controller
      */
     public function update(Request $request, \App\Models\Company $company)
     {
+        $user = request()->user();
+
+        if (
+            $user->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR) &&
+            (int) $user->company_id !== (int) $company->id
+        ) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'code' => [
@@ -114,6 +132,15 @@ class CompanyManagementController extends Controller
 
     public function toggleStatus(\App\Models\Company $company)
     {
+        $user = request()->user();
+
+        if (
+            $user->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR) &&
+            (int) $user->company_id !== (int) $company->id
+        ) {
+            abort(403);
+        }
+
         $company->update([
             'is_active' => !$company->is_active,
         ]);

@@ -96,11 +96,24 @@
                                     @csrf
                                     @method('PATCH')
 
+                                    @if ($company->is_active)
+
                                     <button
                                         type="submit"
-                                        class="px-3 py-2 bg-gray-800 text-white rounded-md">
-                                        {{ $company->is_active ? 'Deactivate Company' : 'Activate Company' }}
+                                        style="background-color: #dc2626; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer;">
+                                        Deactivate Company
                                     </button>
+
+                                    @else
+
+                                    <button
+                                        type="submit"
+                                        style="background-color: #16a34a; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer;">
+                                        Activate Company
+                                    </button>
+
+                                    @endif
+
                                 </form>
 
                             </div>

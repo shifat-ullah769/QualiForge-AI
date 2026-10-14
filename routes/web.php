@@ -65,7 +65,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Company Management
+    | Company Management - System Admin + Company Admin
     |--------------------------------------------------------------------------
     */
 
@@ -74,24 +74,23 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/companies', [CompanyManagementController::class, 'index'])
             ->name('companies.index');
 
-        Route::get('/companies/{company}', [CompanyManagementController::class, 'show'])
-            ->name('companies.show');
-    });
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | System Administrator - Company Management
-    |--------------------------------------------------------------------------
-    */
-
-    Route::middleware('role:system_administrator')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | IMPORTANT:
+        | /companies/create must come BEFORE /companies/{company}
+        |--------------------------------------------------------------------------
+        */
 
         Route::get('/companies/create', [CompanyManagementController::class, 'create'])
+            ->middleware('role:system_administrator')
             ->name('companies.create');
 
         Route::post('/companies', [CompanyManagementController::class, 'store'])
+            ->middleware('role:system_administrator')
             ->name('companies.store');
+
+        Route::get('/companies/{company}', [CompanyManagementController::class, 'show'])
+            ->name('companies.show');
 
         Route::get('/companies/{company}/edit', [CompanyManagementController::class, 'edit'])
             ->name('companies.edit');
