@@ -5,59 +5,472 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>QualiForge AI</title>
+    <title>QualiForge AI — Manufacturing Quality Intelligence</title>
 
-    <!-- Bootstrap CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <meta name="description"
+        content="QualiForge AI transforms manufacturing production data into actionable quality intelligence using machine learning and risk analysis.">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --qf-dark: #07111f;
+            --qf-dark-2: #0b1728;
+            --qf-cyan: #22d3ee;
+            --qf-blue: #3b82f6;
+            --qf-text: #e5eef8;
+            --qf-muted: #91a4b8;
+            --qf-border: rgba(148, 163, 184, 0.16);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #ffffff;
+            color: #172033;
+            font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .qf-navbar {
+            background: rgba(7, 17, 31, 0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .qf-brand {
+            letter-spacing: -0.5px;
+        }
+
+        .qf-brand-mark {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--qf-cyan), var(--qf-blue));
+            color: #06111e;
+            font-weight: 800;
+            box-shadow: 0 0 25px rgba(34, 211, 238, 0.18);
+        }
+
+        .qf-navbar .nav-link {
+            color: #9fb0c2;
+            font-size: 0.93rem;
+            margin: 0 5px;
+            transition: 0.2s ease;
+        }
+
+        .qf-navbar .nav-link:hover,
+        .qf-navbar .nav-link.active {
+            color: #ffffff;
+        }
+
+        .qf-login-btn {
+            border: 1px solid rgba(34, 211, 238, 0.5);
+            color: var(--qf-cyan);
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .qf-login-btn:hover {
+            background: var(--qf-cyan);
+            color: #07111f;
+            border-color: var(--qf-cyan);
+        }
+
+        /* ================= HERO ================= */
+
+        .qf-hero {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.10), transparent 28%),
+                radial-gradient(circle at 15% 80%, rgba(59, 130, 246, 0.10), transparent 28%),
+                linear-gradient(135deg, #07111f 0%, #0b1728 55%, #0a1423 100%);
+            color: white;
+        }
+
+        .qf-hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 42px 42px;
+            pointer-events: none;
+        }
+
+        .qf-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .qf-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            border: 1px solid rgba(34, 211, 238, 0.25);
+            background: rgba(34, 211, 238, 0.07);
+            border-radius: 999px;
+            color: var(--qf-cyan);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .qf-eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
+        }
+
+        .qf-hero h1 {
+            font-size: clamp(2.7rem, 5vw, 4.7rem);
+            line-height: 1.02;
+            letter-spacing: -0.055em;
+        }
+
+        .qf-gradient-text {
+            background: linear-gradient(90deg,
+                    #ffffff,
+                    #8be9f8,
+                    #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .qf-hero-description {
+            max-width: 650px;
+            color: #9fb0c2;
+            font-size: 1.08rem;
+            line-height: 1.8;
+        }
+
+        .qf-primary-btn {
+            background: linear-gradient(135deg, var(--qf-cyan), #38bdf8);
+            color: #06111e;
+            border: none;
+            font-weight: 700;
+            padding: 12px 22px;
+            border-radius: 9px;
+            transition: 0.2s ease;
+        }
+
+        .qf-primary-btn:hover {
+            transform: translateY(-2px);
+            color: #06111e;
+            box-shadow: 0 12px 30px rgba(34, 211, 238, 0.18);
+        }
+
+        .qf-secondary-btn {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #dce7f2;
+            padding: 12px 22px;
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .qf-secondary-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ================= DASHBOARD PREVIEW ================= */
+
+        .qf-dashboard {
+            background: rgba(10, 23, 40, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            border-radius: 16px;
+            box-shadow:
+                0 35px 80px rgba(0, 0, 0, 0.35),
+                0 0 50px rgba(34, 211, 238, 0.05);
+            overflow: hidden;
+        }
+
+        .qf-dashboard-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--qf-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qf-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #6ee7b7;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .qf-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #34d399;
+        }
+
+        .qf-dashboard-body {
+            padding: 20px;
+        }
+
+        .qf-metric {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(148, 163, 184, 0.10);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .qf-metric-label {
+            color: #7f93a8;
+            font-size: 0.75rem;
+        }
+
+        .qf-metric-value {
+            color: white;
+            font-size: 1.65rem;
+            font-weight: 750;
+            margin-top: 5px;
+        }
+
+        .qf-chart {
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            background:
+                linear-gradient(to bottom,
+                    rgba(34, 211, 238, 0.04),
+                    transparent);
+        }
+
+        .qf-chart-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 22px;
+            height: 70px;
+            background: linear-gradient(135deg,
+                    transparent 5%,
+                    transparent 15%,
+                    rgba(34, 211, 238, 0.8) 16%,
+                    rgba(34, 211, 238, 0.8) 17%,
+                    transparent 18%,
+                    transparent 30%,
+                    rgba(34, 211, 238, 0.8) 31%,
+                    rgba(34, 211, 238, 0.8) 32%,
+                    transparent 33%,
+                    transparent 48%,
+                    rgba(34, 211, 238, 0.8) 49%,
+                    rgba(34, 211, 238, 0.8) 50%,
+                    transparent 51%,
+                    transparent 63%,
+                    rgba(34, 211, 238, 0.8) 64%,
+                    rgba(34, 211, 238, 0.8) 65%,
+                    transparent 66%,
+                    transparent 77%,
+                    rgba(34, 211, 238, 0.8) 78%,
+                    rgba(34, 211, 238, 0.8) 79%,
+                    transparent 80%);
+            opacity: 0.7;
+        }
+
+        /* ================= SECTION ================= */
+
+        .qf-section-label {
+            color: #0891b2;
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .qf-section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.04em;
+        }
+
+        .qf-section-description {
+            max-width: 700px;
+            color: #6b7c8f;
+            line-height: 1.8;
+        }
+
+        /* ================= FEATURE CARDS ================= */
+
+        .qf-feature-card {
+            height: 100%;
+            border: 1px solid #e7edf3;
+            border-radius: 14px;
+            padding: 28px;
+            background: white;
+            transition: 0.25s ease;
+        }
+
+        .qf-feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(34, 211, 238, 0.4);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .qf-feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecfeff;
+            color: #0891b2;
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+        }
+
+        .qf-feature-card p {
+            color: #718096;
+            line-height: 1.7;
+        }
+
+        /* ================= WORKFLOW ================= */
+
+        .qf-workflow {
+            background: #f7fafc;
+        }
+
+        .qf-step {
+            position: relative;
+            height: 100%;
+            padding: 28px;
+            border: 1px solid #e4ebf2;
+            border-radius: 14px;
+            background: white;
+        }
+
+        .qf-step-number {
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: #0891b2;
+            margin-bottom: 16px;
+        }
+
+        /* ================= CTA ================= */
+
+        .qf-cta {
+            background:
+                radial-gradient(circle at 15% 50%, rgba(34, 211, 238, 0.10), transparent 25%),
+                linear-gradient(135deg, #07111f, #0b1728);
+            color: white;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .qf-footer {
+            background: #050d18;
+            color: #91a4b8;
+        }
+
+        .qf-footer-brand {
+            color: white;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 991px) {
+            .qf-navbar .nav-link {
+                margin: 4px 0;
+            }
+
+            .qf-hero {
+                text-align: center;
+            }
+
+            .qf-hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .qf-hero-actions {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
     <!-- ================= NAVBAR ================= -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
 
-            <a class="navbar-brand fw-bold fs-4" href="#">
-                QualiForge <span class="text-info">AI</span>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top qf-navbar">
+        <div class="container py-2">
+
+            <a class="navbar-brand d-flex align-items-center gap-2 qf-brand" href="#">
+                <span class="qf-brand-mark">Q</span>
+
+                <span class="fw-bold fs-5">
+                    QualiForge <span style="color: #22d3ee;">AI</span>
+                </span>
             </a>
 
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#mainNavbar">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="mainNavbar">
 
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Dashboard</a>
+                        <a class="nav-link active" href="#home">
+                            Platform
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#features">Features</a>
+                        <a class="nav-link" href="#features">
+                            Capabilities
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#workflow">Workflow</a>
+                        <a class="nav-link" href="#workflow">
+                            Workflow
+                        </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="#about">
+                            About
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
+                        <a href="{{ route('login') }}" class="btn qf-login-btn">
+                            Sign in
+                        </a>
                     </li>
 
                 </ul>
-
-                <div class="ms-lg-3">
-                    <a href="{{ route('login') }}" class="btn btn-outline-info">
-                        Login
-                    </a>
-                </div>
 
             </div>
         </div>
@@ -65,41 +478,61 @@
 
 
     <!-- ================= HERO ================= -->
-    <section class="bg-dark text-white py-5">
+
+    <section id="home" class="qf-hero">
 
         <div class="container py-5">
+            <div class="row align-items-center g-5 py-lg-5 qf-hero-content">
 
-            <div class="row align-items-center g-5">
-
-                <!-- Hero Text -->
                 <div class="col-lg-6">
 
-                    <span class="badge bg-info text-dark mb-3 px-3 py-2">
-                        AI-Powered Manufacturing Quality
-                    </span>
+                    <div class="qf-eyebrow mb-4">
+                        <span class="qf-eyebrow-dot"></span>
+                        Manufacturing Quality Intelligence
+                    </div>
 
-                    <h1 class="display-4 fw-bold mb-4">
-                        Smarter Manufacturing.
-                        <span class="text-info">
-                            Better Quality.
+                    <h1 class="fw-bold mb-4">
+                        Turn production data into
+                        <span class="qf-gradient-text">
+                            quality intelligence.
                         </span>
                     </h1>
 
-                    <p class="lead text-light mb-4">
-                        QualiForge AI transforms production data into
-                        actionable quality insights using machine learning
-                        and intelligent risk analysis.
+                    <p class="qf-hero-description mb-4">
+                        QualiForge AI connects manufacturing data, machine
+                        learning and quality analysis to help teams identify
+                        emerging production risks and make better decisions.
                     </p>
 
-                    <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex flex-wrap gap-3 qf-hero-actions">
 
-                        <a href="#features" class="btn btn-info btn-lg px-4">
+                        <a href="#features" class="btn qf-primary-btn">
                             Explore Platform
+                            <i class="bi bi-arrow-right ms-2"></i>
                         </a>
 
-                        <a href="#workflow" class="btn btn-outline-light btn-lg px-4">
-                            How It Works
+                        <a href="#workflow" class="btn qf-secondary-btn">
+                            See How It Works
                         </a>
+
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-4 mt-5 small" style="color: #71869b;">
+
+                        <span>
+                            <i class="bi bi-shield-check me-1"></i>
+                            Data-driven
+                        </span>
+
+                        <span>
+                            <i class="bi bi-cpu me-1"></i>
+                            ML-powered
+                        </span>
+
+                        <span>
+                            <i class="bi bi-graph-up-arrow me-1"></i>
+                            Action-oriented
+                        </span>
 
                     </div>
 
@@ -107,87 +540,100 @@
 
 
                 <!-- Dashboard Preview -->
+
                 <div class="col-lg-6">
 
-                    <div class="card shadow-lg border-0">
+                    <div class="qf-dashboard">
 
-                        <div class="card-header bg-white">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="fw-bold text-dark">
+                        <div class="qf-dashboard-header">
+
+                            <div>
+                                <div class="text-white fw-semibold">
                                     Quality Intelligence
-                                </span>
+                                </div>
 
-                                <span class="badge bg-success">
-                                    System Active
-                                </span>
+                                <div class="small" style="color: #71869b;">
+                                    Production overview
+                                </div>
                             </div>
+
+                            <div class="qf-status">
+                                <span class="qf-status-dot"></span>
+                                System Active
+                            </div>
+
                         </div>
 
-                        <div class="card-body text-dark">
+
+                        <div class="qf-dashboard-body">
 
                             <div class="row g-3">
 
                                 <div class="col-6">
-                                    <div class="card bg-light border-0 h-100">
-                                        <div class="card-body">
-                                            <small class="text-muted">
-                                                Production Records
-                                            </small>
+                                    <div class="qf-metric">
 
-                                            <h3 class="fw-bold mt-2">
-                                                12,480
-                                            </h3>
-
-                                            <span class="text-success small">
-                                                Processed Data
-                                            </span>
+                                        <div class="qf-metric-label">
+                                            Production Records
                                         </div>
+
+                                        <div class="qf-metric-value">
+                                            12.4K
+                                        </div>
+
+                                        <div class="small mt-1" style="color:#6ee7b7;">
+                                            <i class="bi bi-arrow-up"></i>
+                                            Processed
+                                        </div>
+
                                     </div>
                                 </div>
 
 
                                 <div class="col-6">
-                                    <div class="card bg-light border-0 h-100">
-                                        <div class="card-body">
-                                            <small class="text-muted">
-                                                Quality Risk
-                                            </small>
+                                    <div class="qf-metric">
 
-                                            <h3 class="fw-bold mt-2">
-                                                8.4%
-                                            </h3>
-
-                                            <span class="text-warning small">
-                                                Potential Risk
-                                            </span>
+                                        <div class="qf-metric-label">
+                                            Quality Risk
                                         </div>
+
+                                        <div class="qf-metric-value">
+                                            8.4%
+                                        </div>
+
+                                        <div class="small mt-1" style="color:#fbbf24;">
+                                            Potential Risk
+                                        </div>
+
                                     </div>
                                 </div>
 
 
                                 <div class="col-12">
 
-                                    <div class="card border-0 bg-light">
-                                        <div class="card-body">
+                                    <div class="qf-metric">
 
-                                            <div class="d-flex justify-content-between mb-2">
-                                                <span class="fw-semibold">
-                                                    Quality Status
-                                                </span>
+                                        <div class="d-flex justify-content-between mb-3">
 
-                                                <span class="text-success fw-semibold">
+                                            <div>
+                                                <div class="qf-metric-label">
+                                                    Quality Trend
+                                                </div>
+
+                                                <div class="text-white fw-semibold mt-1">
                                                     Stable
-                                                </span>
+                                                </div>
                                             </div>
 
-                                            <div class="progress" style="height: 10px;">
-                                                <div
-                                                    class="progress-bar bg-success"
-                                                    role="progressbar"
-                                                    style="width: 84%"></div>
-                                            </div>
+                                            <span class="small" style="color:#6ee7b7;">
+                                                +12.8%
+                                            </span>
 
                                         </div>
+
+                                        <div class="qf-chart">
+                                            <div class="qf-chart-line"></div>
+                                        </div>
+
                                     </div>
 
                                 </div>
@@ -201,30 +647,31 @@
                 </div>
 
             </div>
-
         </div>
 
     </section>
 
 
     <!-- ================= FEATURES ================= -->
+
     <section id="features" class="py-5">
 
-        <div class="container py-4">
+        <div class="container py-5">
 
             <div class="text-center mb-5">
 
-                <span class="badge bg-info text-dark mb-2">
-                    Platform Features
-                </span>
+                <div class="qf-section-label mb-2">
+                    Platform Capabilities
+                </div>
 
-                <h2 class="fw-bold">
-                    Manufacturing Quality Intelligence
+                <h2 class="qf-section-title fw-bold mb-3">
+                    Built around manufacturing quality.
                 </h2>
 
-                <p class="text-muted mx-auto" style="max-width: 700px;">
-                    A focused platform for transforming production data
-                    into meaningful quality and risk information.
+                <p class="qf-section-description mx-auto mb-0">
+                    A focused intelligence layer that connects production
+                    information with machine learning and actionable quality
+                    analysis.
                 </p>
 
             </div>
@@ -232,165 +679,123 @@
 
             <div class="row g-4">
 
-                <!-- Feature 1 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                📊
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Production Data
-                            </h5>
-
-                            <p class="text-muted">
-                                Upload and manage manufacturing datasets
-                                for quality analysis and machine learning.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-database"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Production Data
+                        </h5>
 
+                        <p class="mb-0">
+                            Organize and prepare manufacturing datasets
+                            for downstream quality analysis.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Feature 2 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                🤖
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Machine Learning
-                            </h5>
-
-                            <p class="text-muted">
-                                Use trained machine learning models to
-                                analyze production quality patterns.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-cpu"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Machine Learning
+                        </h5>
 
+                        <p class="mb-0">
+                            Apply machine learning models to uncover
+                            meaningful patterns within production data.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Feature 3 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                ⚠️
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Risk Detection
-                            </h5>
-
-                            <p class="text-muted">
-                                Identify potential quality risks and
-                                abnormal production conditions.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-exclamation-triangle"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Risk Detection
+                        </h5>
 
+                        <p class="mb-0">
+                            Identify production conditions associated with
+                            potential quality risks.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Feature 4 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                📈
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Quality Dashboard
-                            </h5>
-
-                            <p class="text-muted">
-                                Monitor important quality indicators
-                                through an intuitive dashboard.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-speedometer2"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Quality Dashboard
+                        </h5>
 
+                        <p class="mb-0">
+                            Bring important quality indicators into one
+                            focused operational view.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Feature 5 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                🔍
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Explainable Insights
-                            </h5>
-
-                            <p class="text-muted">
-                                Understand which production factors
-                                contribute to predicted quality risks.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-search"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Explainable Insights
+                        </h5>
 
+                        <p class="mb-0">
+                            Understand the factors contributing to quality
+                            risk and model decisions.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Feature 6 -->
                 <div class="col-md-6 col-lg-4">
+                    <div class="qf-feature-card">
 
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <div class="card-body p-4">
-
-                            <div class="fs-1 mb-3">
-                                📋
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Prediction History
-                            </h5>
-
-                            <p class="text-muted">
-                                Keep track of previous predictions and
-                                quality analysis results.
-                            </p>
-
+                        <div class="qf-feature-icon">
+                            <i class="bi bi-clock-history"></i>
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Prediction History
+                        </h5>
 
+                        <p class="mb-0">
+                            Maintain a structured history of quality analysis
+                            and prediction results.
+                        </p>
+
+                    </div>
                 </div>
 
             </div>
@@ -401,134 +806,108 @@
 
 
     <!-- ================= WORKFLOW ================= -->
-    <section id="workflow" class="bg-light py-5">
 
-        <div class="container py-4">
+    <section id="workflow" class="qf-workflow py-5">
+
+        <div class="container py-5">
 
             <div class="text-center mb-5">
 
-                <span class="badge bg-dark mb-2">
-                    Workflow
-                </span>
+                <div class="qf-section-label mb-2">
+                    Intelligence Workflow
+                </div>
 
-                <h2 class="fw-bold">
-                    From Production Data to Quality Intelligence
+                <h2 class="qf-section-title fw-bold mb-3">
+                    From production data to action.
                 </h2>
 
-                <p class="text-muted">
-                    A simple workflow connecting manufacturing data
-                    with machine learning based quality analysis.
+                <p class="qf-section-description mx-auto mb-0">
+                    QualiForge AI creates a clear path from raw production
+                    information to useful quality intelligence.
                 </p>
 
             </div>
 
 
-            <div class="row g-4 text-center">
+            <div class="row g-4">
 
-                <!-- Step 1 -->
                 <div class="col-md-6 col-lg-3">
+                    <div class="qf-step">
 
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="display-5 fw-bold text-info mb-3">
-                                01
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Upload Data
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                Provide production data for analysis.
-                            </p>
-
+                        <div class="qf-step-number">
+                            STEP 01
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Upload Data
+                        </h5>
 
+                        <p class="text-muted mb-0">
+                            Bring relevant production records into the
+                            quality intelligence workflow.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Step 2 -->
                 <div class="col-md-6 col-lg-3">
+                    <div class="qf-step">
 
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="display-5 fw-bold text-info mb-3">
-                                02
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Prepare Data
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                Validate and prepare the dataset
-                                for machine learning.
-                            </p>
-
+                        <div class="qf-step-number">
+                            STEP 02
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Prepare & Validate
+                        </h5>
 
+                        <p class="text-muted mb-0">
+                            Validate and prepare production data for
+                            reliable downstream analysis.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Step 3 -->
                 <div class="col-md-6 col-lg-3">
+                    <div class="qf-step">
 
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="display-5 fw-bold text-info mb-3">
-                                03
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Predict
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                Apply machine learning models to
-                                estimate quality risk.
-                            </p>
-
+                        <div class="qf-step-number">
+                            STEP 03
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Analyze
+                        </h5>
 
+                        <p class="text-muted mb-0">
+                            Apply machine learning and quality analysis
+                            to identify important patterns.
+                        </p>
+
+                    </div>
                 </div>
 
 
-                <!-- Step 4 -->
                 <div class="col-md-6 col-lg-3">
+                    <div class="qf-step">
 
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body p-4">
-
-                            <div class="display-5 fw-bold text-info mb-3">
-                                04
-                            </div>
-
-                            <h5 class="fw-bold">
-                                Take Action
-                            </h5>
-
-                            <p class="text-muted mb-0">
-                                Use the resulting insights to support
-                                quality decisions.
-                            </p>
-
+                        <div class="qf-step-number">
+                            STEP 04
                         </div>
 
-                    </div>
+                        <h5 class="fw-bold">
+                            Take Action
+                        </h5>
 
+                        <p class="text-muted mb-0">
+                            Turn the resulting intelligence into informed
+                            quality decisions.
+                        </p>
+
+                    </div>
                 </div>
 
             </div>
@@ -539,32 +918,33 @@
 
 
     <!-- ================= ABOUT ================= -->
+
     <section id="about" class="py-5">
 
-        <div class="container py-4">
+        <div class="container py-5">
 
             <div class="row align-items-center g-5">
 
                 <div class="col-lg-6">
 
-                    <span class="badge bg-info text-dark mb-3">
+                    <div class="qf-section-label mb-2">
                         About QualiForge AI
-                    </span>
+                    </div>
 
-                    <h2 class="fw-bold mb-4">
-                        Turning Manufacturing Data Into Actionable Insight
+                    <h2 class="qf-section-title fw-bold mb-4">
+                        A quality intelligence layer for modern manufacturing.
                     </h2>
 
-                    <p class="text-muted">
-                        QualiForge AI is designed as a manufacturing quality
-                        intelligence platform that connects production data,
-                        machine learning and quality risk analysis.
+                    <p class="text-muted" style="line-height:1.85;">
+                        QualiForge AI is designed to connect manufacturing
+                        production data with machine learning and quality
+                        risk analysis.
                     </p>
 
-                    <p class="text-muted">
-                        The platform focuses on helping manufacturing teams
-                        understand production quality patterns and identify
-                        potential risks through data-driven analysis.
+                    <p class="text-muted" style="line-height:1.85;">
+                        The goal is simple: help manufacturing teams move
+                        beyond raw production records and turn data into
+                        useful, understandable quality intelligence.
                     </p>
 
                 </div>
@@ -572,40 +952,76 @@
 
                 <div class="col-lg-6">
 
-                    <div class="card bg-dark text-white border-0 shadow">
+                    <div class="qf-dashboard">
 
-                        <div class="card-body p-4 p-lg-5">
+                        <div class="qf-dashboard-header">
+                            <span class="text-white fw-semibold">
+                                Platform Architecture
+                            </span>
 
-                            <h4 class="fw-bold mb-4">
-                                Core Platform
-                            </h4>
+                            <span class="small" style="color:#71869b;">
+                                v1.0
+                            </span>
+                        </div>
 
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between">
-                                    <span>Production Data</span>
-                                    <span>01</span>
+                        <div class="qf-dashboard-body">
+
+                            <div class="d-flex align-items-center gap-3 py-3 border-bottom"
+                                style="border-color:rgba(148,163,184,0.12)!important;">
+
+                                <span class="qf-brand-mark" style="width:34px;height:34px;">
+                                    01
+                                </span>
+
+                                <div>
+                                    <div class="text-white fw-semibold">
+                                        Production Data
+                                    </div>
+
+                                    <div class="small" style="color:#71869b;">
+                                        Structured manufacturing information
+                                    </div>
                                 </div>
+
                             </div>
 
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between">
-                                    <span>Machine Learning</span>
-                                    <span>02</span>
+
+                            <div class="d-flex align-items-center gap-3 py-3 border-bottom"
+                                style="border-color:rgba(148,163,184,0.12)!important;">
+
+                                <span class="qf-brand-mark" style="width:34px;height:34px;">
+                                    02
+                                </span>
+
+                                <div>
+                                    <div class="text-white fw-semibold">
+                                        Machine Learning
+                                    </div>
+
+                                    <div class="small" style="color:#71869b;">
+                                        Pattern discovery and prediction
+                                    </div>
                                 </div>
+
                             </div>
 
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between">
-                                    <span>Risk Analysis</span>
-                                    <span>03</span>
-                                </div>
-                            </div>
 
-                            <div>
-                                <div class="d-flex justify-content-between">
-                                    <span>Quality Intelligence</span>
-                                    <span>04</span>
+                            <div class="d-flex align-items-center gap-3 py-3">
+
+                                <span class="qf-brand-mark" style="width:34px;height:34px;">
+                                    03
+                                </span>
+
+                                <div>
+                                    <div class="text-white fw-semibold">
+                                        Quality Intelligence
+                                    </div>
+
+                                    <div class="small" style="color:#71869b;">
+                                        Actionable quality information
+                                    </div>
                                 </div>
+
                             </div>
 
                         </div>
@@ -622,20 +1038,27 @@
 
 
     <!-- ================= CTA ================= -->
-    <section class="bg-info py-5">
+
+    <section class="qf-cta py-5">
 
         <div class="container text-center py-4">
 
+            <div class="qf-eyebrow mb-3">
+                <span class="qf-eyebrow-dot"></span>
+                Quality Intelligence Platform
+            </div>
+
             <h2 class="fw-bold mb-3">
-                Build a Smarter Quality Workflow
+                Build a smarter quality workflow.
             </h2>
 
-            <p class="lead mb-4">
-                Transform production data into meaningful quality intelligence.
+            <p class="mb-4" style="color:#91a4b8;">
+                Transform manufacturing data into meaningful quality intelligence.
             </p>
 
-            <a href="#" class="btn btn-dark btn-lg px-4">
-                Get Started
+            <a href="{{ route('login') }}" class="btn qf-primary-btn">
+                Access Platform
+                <i class="bi bi-arrow-right ms-2"></i>
             </a>
 
         </div>
@@ -644,30 +1067,48 @@
 
 
     <!-- ================= FOOTER ================= -->
-    <footer class="bg-dark text-white">
 
-        <div class="container py-4">
+    <footer class="qf-footer">
 
-            <div class="text-center">
+        <div class="container py-5">
 
-                <h5 class="fw-bold mb-2">
-                    QualiForge <span class="text-info">AI</span>
-                </h5>
+            <div class="row g-4">
 
-                <p class="text-secondary mb-3">
-                    Manufacturing Quality Intelligence Platform
-                </p>
+                <div class="col-lg-6">
 
-                <p class="text-secondary small mb-2">
-                    © {{ date('Y') }} QualiForge AI. All rights reserved.
-                </p>
+                    <div class="d-flex align-items-center gap-2 mb-3">
 
-                <p class="text-secondary small mb-0">
-                    Developed by
-                    <span class="text-info fw-semibold">
-                        Shifat
-                    </span>
-                </p>
+                        <span class="qf-brand-mark">
+                            Q
+                        </span>
+
+                        <span class="qf-footer-brand fw-bold fs-5">
+                            QualiForge <span style="color:#22d3ee;">AI</span>
+                        </span>
+
+                    </div>
+
+                    <p class="mb-0" style="max-width:500px;">
+                        Manufacturing Quality Intelligence Platform
+                        connecting production data, machine learning
+                        and actionable quality analysis.
+                    </p>
+
+                </div>
+
+
+                <div class="col-lg-6 text-lg-end">
+
+                    <div class="small mb-2">
+                        © {{ date('Y') }} QualiForge AI.
+                        All rights reserved.
+                    </div>
+
+                    <div class="small">
+                        Built for intelligent manufacturing.
+                    </div>
+
+                </div>
 
             </div>
 
@@ -677,9 +1118,8 @@
 
 
     <!-- Bootstrap JS -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
