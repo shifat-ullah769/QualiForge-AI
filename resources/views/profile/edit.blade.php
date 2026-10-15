@@ -7,9 +7,19 @@
         <div class="qf-page-header">
 
             <div>
+
                 <div class="qf-eyebrow">
+
                     <i class="bi bi-person-circle"></i>
-                    QUALIFORGE AI
+
+                    @if (auth()->user()->hasRole(\App\UserRole::SYSTEM_ADMINISTRATOR))
+                        QUALIFORGE AI
+                    @elseif (auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
+                        COMPANY WORKSPACE
+                    @else
+                        QUALIFORGE AI
+                    @endif
+
                 </div>
 
                 <h2 class="qf-page-title">
@@ -17,8 +27,19 @@
                 </h2>
 
                 <p class="qf-page-subtitle">
-                    Manage your personal information, password, and account settings.
+
+                    @if (auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
+
+                        Manage your personal information, password, and company account settings.
+
+                    @else
+
+                        Manage your personal information, password, and account settings.
+
+                    @endif
+
                 </p>
+
             </div>
 
         </div>
@@ -44,13 +65,21 @@
                     </div>
 
                     <div>
+
                         <h3 class="qf-card-title">
                             Profile Information
                         </h3>
 
                         <p class="qf-card-description">
-                            Update your account information and profile details.
+
+                            @if (auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
+                                Update your personal information and company profile details.
+                            @else
+                                Update your account information and profile details.
+                            @endif
+
                         </p>
+
                     </div>
 
                 </div>
@@ -74,6 +103,7 @@
                     </div>
 
                     <div>
+
                         <h3 class="qf-card-title">
                             Update Password
                         </h3>
@@ -81,6 +111,7 @@
                         <p class="qf-card-description">
                             Make sure your account uses a strong and secure password.
                         </p>
+
                     </div>
 
                 </div>
@@ -104,13 +135,21 @@
                     </div>
 
                     <div>
+
                         <h3 class="qf-card-title">
                             Delete Account
                         </h3>
 
                         <p class="qf-card-description">
-                            Permanently remove your account and associated access.
+
+                            @if (auth()->user()->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR))
+                                Permanently remove your account and associated company access.
+                            @else
+                                Permanently remove your account and associated access.
+                            @endif
+
                         </p>
+
                     </div>
 
                 </div>
@@ -153,6 +192,7 @@
                 #0b1220;
         }
 
+
         .qf-profile-container {
             width: 100%;
             max-width: 1050px;
@@ -174,6 +214,7 @@
             justify-content: space-between;
         }
 
+
         .qf-eyebrow {
             display: flex;
             align-items: center;
@@ -188,6 +229,7 @@
             letter-spacing: 2px;
         }
 
+
         .qf-page-title {
             margin: 0;
 
@@ -196,6 +238,7 @@
             font-size: 25px;
             font-weight: 750;
         }
+
 
         .qf-page-subtitle {
             margin: 5px 0 0;
@@ -231,6 +274,7 @@
                 box-shadow 0.2s ease;
         }
 
+
         .qf-profile-card:hover {
             border-color: #31506b;
 
@@ -256,6 +300,7 @@
                 rgba(8, 15, 27, 0.40);
         }
 
+
         .qf-card-icon {
             display: flex;
             align-items: center;
@@ -271,6 +316,7 @@
             font-size: 17px;
         }
 
+
         .qf-icon-cyan {
             border: 1px solid rgba(34, 211, 238, 0.25);
 
@@ -278,6 +324,7 @@
 
             color: #22d3ee;
         }
+
 
         .qf-icon-purple {
             border: 1px solid rgba(167, 139, 250, 0.25);
@@ -287,6 +334,7 @@
             color: #a78bfa;
         }
 
+
         .qf-icon-red {
             border: 1px solid rgba(248, 113, 113, 0.25);
 
@@ -294,6 +342,7 @@
 
             color: #f87171;
         }
+
 
         .qf-card-title {
             margin: 0 0 4px;
@@ -303,6 +352,7 @@
             font-size: 16px;
             font-weight: 750;
         }
+
 
         .qf-card-description {
             margin: 0;
@@ -363,6 +413,7 @@
             border-radius: 50% !important;
         }
 
+
         .qf-profile-info-card .rounded-lg {
             border-radius: 50% !important;
         }
@@ -397,6 +448,7 @@
             font-size: 12px !important;
         }
 
+
         .qf-profile-info-card input[type="file"]::file-selector-button {
             margin-right: 10px;
 
@@ -415,6 +467,7 @@
 
             cursor: pointer;
         }
+
 
         .qf-profile-info-card input[type="file"]::file-selector-button:hover {
             border-color: #0891b2;
@@ -441,10 +494,12 @@
             border-radius: 8px !important;
         }
 
+
         .qf-profile-card input::placeholder,
         .qf-profile-card textarea::placeholder {
             color: #475569 !important;
         }
+
 
         .qf-profile-card input:focus,
         .qf-profile-card textarea:focus,
@@ -466,6 +521,7 @@
             color: #64748b;
         }
 
+
         .qf-profile-card .text-gray-600,
         .qf-profile-card .text-gray-700,
         .qf-profile-card .text-gray-800,
@@ -473,10 +529,12 @@
             color: #94a3b8 !important;
         }
 
+
         .qf-profile-card .text-gray-400,
         .qf-profile-card .text-gray-500 {
             color: #64748b !important;
         }
+
 
         .qf-profile-card .dark\:text-gray-100,
         .qf-profile-card .dark\:text-gray-200 {
@@ -508,6 +566,7 @@
             transition: all 0.2s ease !important;
         }
 
+
         .qf-profile-card button[type="submit"]:hover {
             border-color: #22d3ee !important;
 
@@ -526,6 +585,7 @@
         .qf-profile-card .text-green-500 {
             color: #4ade80 !important;
         }
+
 
         .qf-profile-card .bg-green-100 {
             background: rgba(34, 197, 94, 0.10) !important;
@@ -551,9 +611,11 @@
             border-color: rgba(239, 68, 68, 0.22);
         }
 
+
         .qf-danger-card:hover {
             border-color: rgba(239, 68, 68, 0.38);
         }
+
 
         .qf-danger-card button[type="submit"] {
             border-color: rgba(248, 113, 113, 0.35) !important;
@@ -563,6 +625,7 @@
 
             color: #f87171 !important;
         }
+
 
         .qf-danger-card button[type="submit"]:hover {
             border-color: #f87171 !important;
@@ -583,6 +646,7 @@
             color: #38bdf8;
         }
 
+
         .qf-profile-card a:hover {
             color: #67e8f9;
         }
@@ -598,18 +662,22 @@
                 padding: 28px 15px 45px;
             }
 
+
             .qf-card-header {
                 align-items: flex-start;
                 padding: 18px;
             }
 
+
             .qf-card-body {
                 padding: 18px;
             }
 
+
             .qf-page-title {
                 font-size: 22px;
             }
+
 
             .qf-profile-info-card .qf-card-body img {
                 width: 82px !important;

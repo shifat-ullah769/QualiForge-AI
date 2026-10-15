@@ -1,161 +1,22 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Company Management') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-
-                    <h3 class="text-lg font-semibold mb-4">
-                        Companies
-                    </h3>
-
-                    @if (auth()->user()->hasRole(\App\UserRole::SYSTEM_ADMINISTRATOR))
-
-                    <div class="mb-4">
-
-                        <a
-                            href="{{ route('companies.create') }}"
-                            style="
-                            display: inline-block;
-                            background-color: #2563eb;
-                            color: white;
-                            padding: 8px 14px;
-                            border-radius: 6px;
-                            text-decoration: none;
-                            font-weight: 500;
-                        ">
-                            Create Company
-                        </a>
-
-                    </div>
-
-                    @endif
-
-                    @if (session('success'))
-                    <div class="mb-4 rounded-md bg-green-100 px-4 py-3 text-sm text-green-800">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                    <div class="space-y-3">
-                        @forelse ($companies as $company)
-                        <div class="border rounded-md p-4">
-
-                            <p>
-                                <strong>Name:</strong>
-                                {{ $company->name }}
-                            </p>
-
-                            <p>
-                                <strong>Code:</strong>
-                                {{ $company->code }}
-                            </p>
-
-                            <p>
-                                <strong>Industry:</strong>
-                                {{ $company->industry ?? 'Not Set' }}
-                            </p>
-
-                            <p>
-                                <strong>Country:</strong>
-                                {{ $company->country }}
-                            </p>
-
-                            <p>
-                                <strong>Status:</strong>
-                                {{ $company->is_active ? 'Active' : 'Inactive' }}
-                            </p>
-
-                            <p>
-                                <strong>Users:</strong>
-                                {{ $company->users()->count() }}
-                            </p>
-
-                            <div class="mt-4 flex gap-2">
-
-                                <a
-                                    href="{{ route('companies.show', $company) }}"
-                                    style="display: inline-block; background-color: #374151; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
-                                    View Details
-                                </a>
-
-                                <a
-                                    href="{{ route('companies.edit', $company) }}"
-                                    style="display: inline-block; background-color: #2563eb; color: white; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
-                                    Edit
-                                </a>
-
-                                <form
-                                    method="POST"
-                                    action="{{ route('companies.toggle-status', $company) }}">
-                                    @csrf
-                                    @method('PATCH')
-
-                                    @if ($company->is_active)
-
-                                    <button
-                                        type="submit"
-                                        style="background-color: #dc2626; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer;">
-                                        Deactivate Company
-                                    </button>
-
-                                    @else
-
-                                    <button
-                                        type="submit"
-                                        style="background-color: #16a34a; color: white; padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer;">
-                                        Activate Company
-                                    </button>
-
-                                    @endif
-
-                                </form>
-
-                            </div>
-
-                        </div>
-                        @empty
-                        <p class="text-gray-600">
-                            No companies found.
-                        </p>
-                        @endforelse
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout><x-app-layout>
 
     <style>
         /* =========================================================
-           QUALIFORGE AI — COMPANY MANAGEMENT
+           QUALIFORGE AI — COMPANY PAGE
            FRONTEND ONLY
         ========================================================= */
 
         .qf-company-page {
             --qf-bg: #07111f;
-            --qf-surface: #0b192b;
             --qf-border: rgba(148, 163, 184, 0.13);
-
             --qf-text: #f8fafc;
             --qf-text-soft: #cbd5e1;
             --qf-muted: #94a3b8;
             --qf-muted-dark: #64748b;
-
             --qf-cyan: #22d3ee;
             --qf-cyan-soft: #67e8f9;
 
-            --qf-green: #22c55e;
-            --qf-red: #ef4444;
-
             min-height: calc(100vh - 64px);
-
             padding: 34px 24px 60px;
 
             color: var(--qf-text);
@@ -189,7 +50,6 @@
             align-items: flex-end;
             justify-content: space-between;
             gap: 24px;
-
             margin-bottom: 28px;
         }
 
@@ -258,7 +118,6 @@
             border-radius: 10px;
 
             color: #04111d;
-
             background: var(--qf-cyan);
 
             font-size: 12px;
@@ -277,7 +136,6 @@
 
         .qf-create-button:hover {
             color: #04111d;
-
             background: var(--qf-cyan-soft);
 
             transform: translateY(-1px);
@@ -302,7 +160,6 @@
             border-radius: 11px;
 
             color: #bbf7d0;
-
             background: rgba(34, 197, 94, 0.07);
 
             font-size: 12px;
@@ -322,19 +179,17 @@
             border-radius: 8px;
 
             color: #4ade80;
-
             background: rgba(34, 197, 94, 0.12);
         }
 
         /* =========================================================
-           COMPANY SUMMARY
+           SUMMARY
         ========================================================= */
 
         .qf-summary {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            gap: 8px;
 
             margin-bottom: 15px;
         }
@@ -356,13 +211,11 @@
             min-width: 30px;
             height: 24px;
 
-            margin-left: 7px;
             padding: 0 8px;
 
             border-radius: 7px;
 
             color: var(--qf-cyan-soft);
-
             background: rgba(34, 211, 238, 0.08);
 
             font-size: 11px;
@@ -456,6 +309,7 @@
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
+
             gap: 16px;
 
             padding-bottom: 17px;
@@ -486,7 +340,6 @@
             border-radius: 12px;
 
             color: var(--qf-cyan);
-
             background: rgba(34, 211, 238, 0.07);
 
             font-size: 17px;
@@ -513,6 +366,7 @@
 
             font-size: 10px;
             font-weight: 600;
+
             letter-spacing: 0.04em;
         }
 
@@ -537,13 +391,11 @@
 
         .qf-status.active {
             color: #86efac;
-
             background: rgba(34, 197, 94, 0.08);
         }
 
         .qf-status.inactive {
             color: #fca5a5;
-
             background: rgba(239, 68, 68, 0.08);
         }
 
@@ -589,6 +441,7 @@
 
             font-size: 10px;
             font-weight: 600;
+
             text-transform: uppercase;
             letter-spacing: 0.06em;
         }
@@ -632,7 +485,6 @@
             border-radius: 8px;
 
             color: var(--qf-cyan);
-
             background: rgba(34, 211, 238, 0.07);
         }
 
@@ -751,6 +603,8 @@
         ========================================================= */
 
         .qf-empty {
+            grid-column: 1 / -1;
+
             padding: 70px 25px;
 
             border: 1px dashed rgba(148, 163, 184, 0.16);
@@ -774,7 +628,6 @@
             border-radius: 15px;
 
             color: var(--qf-cyan);
-
             background: rgba(34, 211, 238, 0.07);
 
             font-size: 21px;
@@ -802,14 +655,12 @@
         ========================================================= */
 
         @media (max-width: 1050px) {
-
             .qf-company-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 700px) {
-
             .qf-company-page {
                 padding: 25px 16px 45px;
             }
@@ -825,7 +676,6 @@
         }
 
         @media (max-width: 500px) {
-
             .qf-info-grid {
                 grid-template-columns: 1fr;
             }
@@ -837,18 +687,22 @@
             .qf-action {
                 flex: 1;
             }
-
-            .qf-card-header {
-                align-items: flex-start;
-            }
         }
     </style>
 
+    @php
+        $isSystemAdmin = auth()->user()->hasRole(
+            \App\UserRole::SYSTEM_ADMINISTRATOR
+        );
+
+        $isCompanyAdmin = auth()->user()->hasRole(
+            \App\UserRole::COMPANY_ADMINISTRATOR
+        );
+    @endphp
 
     <div class="qf-company-page">
 
         <div class="qf-company-container">
-
 
             {{-- =====================================================
                  PAGE HEADER
@@ -862,17 +716,38 @@
 
                         <span class="qf-dot"></span>
 
-                        Platform Administration
+                        @if ($isCompanyAdmin)
+                            Company Workspace
+                        @else
+                            Platform Administration
+                        @endif
 
                     </div>
 
                     <h1 class="qf-company-title">
-                        Company Management
+
+                        @if ($isCompanyAdmin)
+                            My Company
+                        @else
+                            Company Management
+                        @endif
+
                     </h1>
 
                     <p class="qf-company-subtitle">
-                        Manage registered manufacturing companies,
-                        review their status and maintain platform access.
+
+                        @if ($isCompanyAdmin)
+
+                            View and manage your company's
+                            information, status and team overview.
+
+                        @else
+
+                            Manage registered manufacturing companies,
+                            review their status and maintain platform access.
+
+                        @endif
+
                     </p>
 
                 </div>
@@ -880,13 +755,14 @@
 
                 {{-- SYSTEM ADMIN ONLY --}}
 
-                @if (auth()->user()->hasRole(\App\UserRole::SYSTEM_ADMINISTRATOR))
+                @if ($isSystemAdmin)
 
                     <a
                         href="{{ route('companies.create') }}"
                         class="qf-create-button"
                     >
                         <i class="bi bi-plus-lg"></i>
+
                         Create Company
                     </a>
 
@@ -904,7 +780,9 @@
                 <div class="qf-success">
 
                     <span class="qf-success-icon">
+
                         <i class="bi bi-check-lg"></i>
+
                     </span>
 
                     {{ session('success') }}
@@ -915,20 +793,24 @@
 
 
             {{-- =====================================================
-                 COMPANY COUNT
+                 COMPANY SUMMARY
             ====================================================== --}}
 
             <div class="qf-summary">
 
                 <h2 class="qf-summary-title">
 
-                    Companies
-
-                    <span class="qf-summary-count">
-                        {{ $companies->count() }}
-                    </span>
+                    @if ($isCompanyAdmin)
+                        Company Overview
+                    @else
+                        Companies
+                    @endif
 
                 </h2>
+
+                <span class="qf-summary-count">
+                    {{ $companies->count() }}
+                </span>
 
             </div>
 
@@ -941,24 +823,17 @@
 
                 @forelse ($companies as $company)
 
-
                     <div class="qf-company-card">
 
-
-                        {{-- =================================================
-                             CARD HEADER
-                        ================================================== --}}
+                        {{-- CARD HEADER --}}
 
                         <div class="qf-card-header">
 
                             <div class="qf-card-company">
 
                                 <span class="qf-company-icon">
-
                                     <i class="bi bi-building"></i>
-
                                 </span>
-
 
                                 <div>
 
@@ -1002,12 +877,9 @@
                         </div>
 
 
-                        {{-- =================================================
-                             COMPANY INFORMATION
-                        ================================================== --}}
+                        {{-- COMPANY INFORMATION --}}
 
                         <div class="qf-info-grid">
-
 
                             <div class="qf-info">
 
@@ -1029,25 +901,20 @@
                                 </div>
 
                                 <div class="qf-info-value">
-                                    {{ $company->country }}
+                                    {{ $company->country ?? 'Not Set' }}
                                 </div>
 
                             </div>
 
-
                         </div>
 
 
-                        {{-- =================================================
-                             USERS
-                        ================================================== --}}
+                        {{-- USERS --}}
 
                         <div class="qf-users">
 
                             <span class="qf-users-icon">
-
                                 <i class="bi bi-people"></i>
-
                             </span>
 
                             <span>
@@ -1065,12 +932,9 @@
                         </div>
 
 
-                        {{-- =================================================
-                             ACTIONS
-                        ================================================== --}}
+                        {{-- ACTIONS --}}
 
                         <div class="qf-actions">
-
 
                             {{-- VIEW --}}
 
@@ -1078,8 +942,11 @@
                                 href="{{ route('companies.show', $company) }}"
                                 class="qf-action view"
                             >
+
                                 <i class="bi bi-eye"></i>
+
                                 View
+
                             </a>
 
 
@@ -1089,8 +956,11 @@
                                 href="{{ route('companies.edit', $company) }}"
                                 class="qf-action edit"
                             >
+
                                 <i class="bi bi-pencil"></i>
+
                                 Edit
+
                             </a>
 
 
@@ -1113,8 +983,11 @@
                                         type="submit"
                                         class="qf-action deactivate"
                                     >
+
                                         <i class="bi bi-pause-circle"></i>
+
                                         Deactivate
+
                                     </button>
 
                                 @else
@@ -1123,27 +996,25 @@
                                         type="submit"
                                         class="qf-action activate"
                                     >
+
                                         <i class="bi bi-play-circle"></i>
+
                                         Activate
+
                                     </button>
 
                                 @endif
 
                             </form>
 
-
                         </div>
-
 
                     </div>
 
 
                 @empty
 
-
-                    {{-- =================================================
-                         EMPTY STATE
-                    ================================================== --}}
+                    {{-- EMPTY STATE --}}
 
                     <div class="qf-empty">
 
@@ -1154,21 +1025,27 @@
                         </div>
 
                         <h3 class="qf-empty-title">
-                            No companies found
+
+                            @if ($isCompanyAdmin)
+                                Company information unavailable
+                            @else
+                                No companies found
+                            @endif
+
                         </h3>
 
                         <p class="qf-empty-text">
-                            There are currently no companies available
-                            for your account.
+
+                            There are currently no companies
+                            available for your account.
+
                         </p>
 
                     </div>
 
-
                 @endforelse
 
             </div>
-
 
         </div>
 
