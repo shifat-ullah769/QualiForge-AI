@@ -55,19 +55,19 @@ class ProfileController extends Controller
      */
 
     public function deletePhoto(Request $request): RedirectResponse
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    if ($user->profile_photo_path) {
-        Storage::disk('public')->delete($user->profile_photo_path);
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
 
-        $user->profile_photo_path = null;
-        $user->save();
+            $user->profile_photo_path = null;
+            $user->save();
+        }
+
+        return Redirect::route('profile.edit')
+            ->with('status', 'profile-photo-deleted');
     }
-
-    return Redirect::route('profile.edit')
-        ->with('status', 'profile-photo-deleted');
-}
 
 
     public function destroy(Request $request): RedirectResponse
