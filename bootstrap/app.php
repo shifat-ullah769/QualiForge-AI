@@ -15,8 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'active' => \App\Http\Middleware\EnsureUserIsActive::class,
+            'absolute' => \App\Http\Middleware\EnforceAbsoluteSessionLifetime::class,
         ]);
-
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

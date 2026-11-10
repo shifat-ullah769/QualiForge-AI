@@ -28,6 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $now = now()->timestamp;
+
+        $request->session()->put([
+            'auth.absolute_started_at' => $now,
+            'auth.last_activity_at' => $now,
+        ]);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

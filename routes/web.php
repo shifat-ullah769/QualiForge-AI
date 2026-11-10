@@ -18,7 +18,7 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'active'])->group(function () {
+Route::middleware(['auth', 'active', 'absolute'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------

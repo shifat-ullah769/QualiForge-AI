@@ -1002,7 +1002,7 @@
 
                         <div class="login-options">
 
-                            <label
+                            <!-- <label
                                 for="remember_me"
                                 class="remember-label"
                             >
@@ -1018,7 +1018,7 @@
                                     Remember me
                                 </span>
 
-                            </label>
+                            </label> -->
 
 
                             @if (Route::has('password.request'))
