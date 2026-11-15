@@ -67,11 +67,6 @@ class DashboardController extends Controller
                 \App\UserRole::PRODUCTION_SUPERVISOR->value
             )->count();
 
-            $totalProductionSupervisors = \App\Models\User::where(
-                'role',
-                \App\UserRole::PRODUCTION_SUPERVISOR->value
-            )->count();
-
             $recentlyCreatedCompanies = \App\Models\Company::latest('created_at')
                 ->take(5)
                 ->get();
@@ -119,6 +114,27 @@ class DashboardController extends Controller
                 'inactiveCompanyAdmins',
                 'inactiveSystemAdmins'
             ));
+        }
+
+        /*
+|--------------------------------------------------------------------------
+| QUALITY ENGINEER DASHBOARD
+|--------------------------------------------------------------------------
+|
+| Quality Engineers work within their assigned company.
+| They focus on inspection, defect analysis and quality monitoring.
+|
+*/
+
+        if ($user->hasRole(\App\UserRole::QUALITY_ENGINEER)) {
+
+            $company = $user->company;
+
+            return view('dashboard', [
+                'dashboardRole' => 'quality_engineer',
+                'qualityEngineer' => $user,
+                'company' => $company,
+            ]);
         }
 
         /*

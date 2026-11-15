@@ -1425,6 +1425,29 @@
 
             </section>
 
+
+            @elseif (auth()->user()->hasRole(\App\UserRole::QUALITY_ENGINEER))
+
+            {{-- =====================================================
+                 QUALITY ENGINEER DASHBOARD
+            ====================================================== --}}
+
+            <div class="qf-qe-dashboard">
+
+                <h1>Quality Engineer Dashboard</h1>
+
+                <p>
+                    Monitor inspections, defects and manufacturing quality.
+                </p>
+
+                <div class="qf-qe-company">
+                    <strong>Assigned Company:</strong>
+
+                    {{ $company?->name ?? 'No company assigned' }}
+                </div>
+
+            </div>
+
             @else
 
             {{-- =====================================================
@@ -2064,6 +2087,133 @@
                     .qf-dashboard-card-header,
                     .qf-dashboard-card-body {
                         padding: 16px;
+                    }
+                }
+
+                /* =========================================================
+   QUALITY MANAGER DASHBOARD
+========================================================= */
+
+                .qf-qm-dashboard {
+                    width: 100%;
+                    color: #f8fafc;
+                }
+
+                .qf-qm-header {
+                    margin-bottom: 28px;
+                }
+
+                .qf-qm-eyebrow {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 9px;
+                    color: #22d3ee;
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: .13em;
+                    text-transform: uppercase;
+                }
+
+                .qf-qm-title {
+                    margin: 0 0 10px;
+                    color: #f8fafc;
+                    font-size: 31px;
+                    font-weight: 750;
+                    line-height: 1.2;
+                }
+
+                .qf-qm-subtitle {
+                    margin: 0;
+                    color: #94a3b8;
+                    font-size: 13px;
+                    line-height: 1.7;
+                }
+
+                .qf-qm-company {
+                    margin-bottom: 22px;
+                    padding: 17px 20px;
+                    border: 1px solid #243247;
+                    border-radius: 12px;
+                    background: #0e2034;
+                    color: #cbd5e1;
+                    font-size: 13px;
+                }
+
+                .qf-qm-company strong {
+                    margin-right: 5px;
+                    color: #22d3ee;
+                }
+
+                .qf-qm-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 20px;
+                }
+
+                .qf-qm-card {
+                    min-width: 0;
+                    padding: 23px;
+                    border: 1px solid #243247;
+                    border-radius: 15px;
+                    background: linear-gradient(145deg, #162031, #0d1726);
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, .16);
+                    transition: border-color .2s ease, transform .2s ease;
+                }
+
+                .qf-qm-card:hover {
+                    border-color: rgba(34, 211, 238, .4);
+                    transform: translateY(-2px);
+                }
+
+                .qf-qm-card h3 {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin: 0 0 13px;
+                    color: #e2e8f0;
+                    font-size: 15px;
+                    font-weight: 750;
+                }
+
+                .qf-qm-card h3 i {
+                    color: #22d3ee;
+                    font-size: 18px;
+                }
+
+                .qf-qm-card p {
+                    margin: 0;
+                    color: #94a3b8;
+                    font-size: 12px;
+                    line-height: 1.8;
+                }
+
+                .qf-qm-status {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-top: 17px;
+                    padding: 6px 10px;
+                    border: 1px solid rgba(245, 158, 11, .2);
+                    border-radius: 20px;
+                    background: rgba(245, 158, 11, .1);
+                    color: #fbbf24;
+                    font-size: 10px;
+                    font-weight: 700;
+                }
+
+                @media (max-width: 850px) {
+                    .qf-qm-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .qf-qm-title {
+                        font-size: 25px;
+                    }
+
+                    .qf-qm-card {
+                        padding: 18px;
                     }
                 }
             </style>
