@@ -1,13 +1,13 @@
 <x-app-layout>
 
     @php
-        $isSystemAdmin = auth()->user()->hasRole(
-            \App\UserRole::SYSTEM_ADMINISTRATOR
-        );
+    $isSystemAdmin = auth()->user()->hasRole(
+    \App\UserRole::SYSTEM_ADMINISTRATOR
+    );
 
-        $isCompanyAdmin = auth()->user()->hasRole(
-            \App\UserRole::COMPANY_ADMINISTRATOR
-        );
+    $isCompanyAdmin = auth()->user()->hasRole(
+    \App\UserRole::COMPANY_ADMINISTRATOR
+    );
     @endphp
 
 
@@ -26,9 +26,9 @@
                     <i class="bi bi-people-fill"></i>
 
                     @if ($isCompanyAdmin)
-                        COMPANY WORKSPACE
+                    COMPANY WORKSPACE
                     @else
-                        QUALIFORGE AI
+                    QUALIFORGE AI
                     @endif
 
                 </div>
@@ -37,9 +37,9 @@
                 <h2 class="qf-page-title">
 
                     @if ($isCompanyAdmin)
-                        My Team
+                    My Team
                     @else
-                        User Management
+                    User Management
                     @endif
 
                 </h2>
@@ -49,11 +49,11 @@
 
                     @if ($isCompanyAdmin)
 
-                        Manage your company's users, roles and access status.
+                    Manage your company's users, roles and access status.
 
                     @else
 
-                        Manage users, roles, access status, and company assignments.
+                    Manage users, roles, access status, and company assignments.
 
                     @endif
 
@@ -81,23 +81,23 @@
 
             @if (session('success'))
 
-                <div class="qf-alert qf-alert-success">
+            <div class="qf-alert qf-alert-success">
 
-                    <div class="qf-alert-icon">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
+                <div class="qf-alert-icon">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+
+                <div>
+
+                    <strong>Success</strong>
 
                     <div>
-
-                        <strong>Success</strong>
-
-                        <div>
-                            {{ session('success') }}
-                        </div>
-
+                        {{ session('success') }}
                     </div>
 
                 </div>
+
+            </div>
 
             @endif
 
@@ -115,9 +115,9 @@
                         <i class="bi bi-person-lines-fill"></i>
 
                         @if ($isCompanyAdmin)
-                            Team Directory
+                        Team Directory
                         @else
-                            User Directory
+                        User Directory
                         @endif
 
                     </div>
@@ -126,9 +126,9 @@
                     <h3 class="qf-section-title">
 
                         @if ($isCompanyAdmin)
-                            Company Users
+                        Company Users
                         @else
-                            Platform Users
+                        Platform Users
                         @endif
 
                     </h3>
@@ -138,11 +138,11 @@
 
                         @if ($isCompanyAdmin)
 
-                            Review and manage users belonging to your company.
+                        Review and manage users belonging to your company.
 
                         @else
 
-                            Review and manage authorized users across the platform.
+                        Review and manage authorized users across the platform.
 
                         @endif
 
@@ -157,8 +157,7 @@
 
                     <a
                         href="{{ route('users.create') }}"
-                        class="qf-primary-btn"
-                    >
+                        class="qf-primary-btn">
 
                         <i class="bi bi-person-plus-fill"></i>
 
@@ -179,427 +178,447 @@
 
                 @forelse ($users as $user)
 
-                    <div class="qf-user-card">
+                <div class="qf-user-card">
 
 
-                        {{-- =====================================
+                    {{-- =====================================
                              USER HEADER
                         ====================================== --}}
 
-                        <div class="qf-user-card-top">
+                    <div class="qf-user-card-top">
 
-                            <div class="qf-user-identity">
+                        <div class="qf-user-identity">
 
-                                <div class="qf-user-avatar">
+                            <div class="qf-user-avatar">
 
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}
-
-                                </div>
-
-
-                                <div class="qf-user-main">
-
-                                    <h4 class="qf-user-name">
-                                        {{ $user->name }}
-                                    </h4>
-
-
-                                    <div class="qf-user-email">
-
-                                        <i class="bi bi-envelope"></i>
-
-                                        {{ $user->email }}
-
-                                    </div>
-
-                                </div>
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
 
                             </div>
 
 
-                            {{-- STATUS --}}
+                            <div class="qf-user-main">
 
-                            <div>
+                                <h4 class="qf-user-name">
+                                    {{ $user->name }}
+                                </h4>
 
-                                @if ($user->is_active)
 
-                                    <span class="qf-status qf-status-active">
+                                <div class="qf-user-email">
 
-                                        <span class="qf-status-dot"></span>
+                                    <i class="bi bi-envelope"></i>
 
-                                        Active
+                                    {{ $user->email }}
 
-                                    </span>
-
-                                @else
-
-                                    <span class="qf-status qf-status-inactive">
-
-                                        <span class="qf-status-dot"></span>
-
-                                        Inactive
-
-                                    </span>
-
-                                @endif
+                                </div>
 
                             </div>
 
                         </div>
 
 
-                        {{-- =====================================
-                             USER INFORMATION
-                        ====================================== --}}
+                        {{-- STATUS --}}
 
-                        <div class="qf-user-info-grid">
+                        <div>
 
+                            @if ($user->is_active)
 
-                            {{-- ROLE --}}
+                            <span class="qf-status qf-status-active">
 
-                            <div class="qf-info-item">
+                                <span class="qf-status-dot"></span>
 
-                                <div class="qf-info-label">
+                                Active
 
-                                    <i class="bi bi-shield-check"></i>
+                            </span>
 
-                                    Role
+                            @else
 
-                                </div>
+                            <span class="qf-status qf-status-inactive">
 
+                                <span class="qf-status-dot"></span>
 
-                                <div class="qf-info-value">
+                                Inactive
 
-                                    @if (
-                                        $user->role?->value ===
-                                        \App\UserRole::SYSTEM_ADMINISTRATOR->value
-                                    )
-
-                                        <span class="qf-role qf-role-system">
-                                            System Administrator
-                                        </span>
-
-                                    @elseif (
-                                        $user->role?->value ===
-                                        \App\UserRole::COMPANY_ADMINISTRATOR->value
-                                    )
-
-                                        <span class="qf-role qf-role-admin">
-                                            Company Administrator
-                                        </span>
-
-                                    @elseif (
-                                        $user->role?->value ===
-                                        \App\UserRole::QUALITY_MANAGER->value
-                                    )
-
-                                        <span class="qf-role">
-                                            Quality Manager
-                                        </span>
-
-                                    @elseif (
-                                        $user->role?->value ===
-                                        \App\UserRole::QUALITY_ENGINEER->value
-                                    )
-
-                                        <span class="qf-role">
-                                            Quality Engineer
-                                        </span>
-
-                                    @elseif (
-                                        $user->role?->value ===
-                                        \App\UserRole::PRODUCTION_SUPERVISOR->value
-                                    )
-
-                                        <span class="qf-role">
-                                            Production Supervisor
-                                        </span>
-
-                                    @else
-
-                                        <span class="qf-role qf-role-unassigned">
-                                            Not Assigned
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-
-                            {{-- COMPANY --}}
-
-                            <div class="qf-info-item">
-
-                                <div class="qf-info-label">
-
-                                    <i class="bi bi-building"></i>
-
-                                    Company
-
-                                </div>
-
-
-                                <div class="qf-info-value">
-
-                                    {{ $user->company?->name ?? 'No Company' }}
-
-                                </div>
-
-                            </div>
-
-
-                            {{-- DEACTIVATED TIME --}}
-
-                            @if (!$user->is_active && $user->deactivated_at)
-
-                                <div class="qf-info-item">
-
-                                    <div class="qf-info-label">
-
-                                        <i class="bi bi-clock-history"></i>
-
-                                        Deactivated
-
-                                    </div>
-
-
-                                    <div class="qf-info-value">
-
-                                        {{ $user->deactivated_at->format('d M Y, h:i A') }}
-
-                                    </div>
-
-                                </div>
-
-                            @endif
-
-                        </div>
-
-
-                        {{-- =====================================
-                             ACTIONS
-                        ====================================== --}}
-
-                        <div class="qf-user-actions">
-
-
-                            {{-- EDIT USER --}}
-
-                            @if (
-                                auth()->user()->hasRole(
-                                    \App\UserRole::SYSTEM_ADMINISTRATOR
-                                )
-                                ||
-                                (
-                                    auth()->user()->hasRole(
-                                        \App\UserRole::COMPANY_ADMINISTRATOR
-                                    )
-                                    &&
-                                    (int) auth()->user()->company_id ===
-                                    (int) $user->company_id
-                                )
-                            )
-
-                                <a
-                                    href="{{ route('users.edit', $user) }}"
-                                    class="qf-action-btn qf-action-edit"
-                                >
-
-                                    <i class="bi bi-pencil-square"></i>
-
-                                    Edit
-
-                                </a>
-
-                            @endif
-
-
-                            {{-- ACTIVATE / DEACTIVATE --}}
-
-                            @if (
-                                auth()->user()->hasRole(
-                                    \App\UserRole::SYSTEM_ADMINISTRATOR
-                                )
-                                ||
-                                (
-                                    auth()->user()->hasRole(
-                                        \App\UserRole::COMPANY_ADMINISTRATOR
-                                    )
-                                    &&
-                                    (int) auth()->user()->company_id ===
-                                    (int) $user->company_id
-                                )
-                            )
-
-                                {{-- System Admin cannot deactivate another System Admin --}}
-
-                                @if (
-                                    !(
-                                        $user->role?->value ===
-                                        \App\UserRole::SYSTEM_ADMINISTRATOR->value
-                                        &&
-                                        $user->id !== auth()->id()
-                                    )
-                                )
-
-                                    <form
-                                        method="POST"
-                                        action="{{ route('users.toggle-status', $user) }}"
-                                        class="qf-inline-form"
-                                    >
-
-                                        @csrf
-
-                                        @method('PATCH')
-
-
-                                        @if ($user->is_active)
-
-                                            <button
-                                                type="submit"
-                                                class="qf-action-btn qf-action-deactivate"
-                                            >
-
-                                                <i class="bi bi-person-dash-fill"></i>
-
-                                                Deactivate
-
-                                            </button>
-
-                                        @else
-
-                                            <button
-                                                type="submit"
-                                                class="qf-action-btn qf-action-activate"
-                                            >
-
-                                                <i class="bi bi-person-check-fill"></i>
-
-                                                Activate
-
-                                            </button>
-
-                                        @endif
-
-                                    </form>
-
-                                @endif
-
-                            @endif
-
-
-                            {{-- DELETE USER --}}
-
-                            @if (
-                                (
-                                    auth()->user()->hasRole(
-                                        \App\UserRole::SYSTEM_ADMINISTRATOR
-                                    )
-                                    &&
-                                    $user->role?->value ===
-                                    \App\UserRole::COMPANY_ADMINISTRATOR->value
-                                )
-                                ||
-                                (
-                                    auth()->user()->hasRole(
-                                        \App\UserRole::COMPANY_ADMINISTRATOR
-                                    )
-                                    &&
-                                    (int) auth()->user()->company_id ===
-                                    (int) $user->company_id
-                                )
-                            )
-
-                                <form
-                                    method="POST"
-                                    action="{{ route('users.destroy', $user) }}"
-                                    class="qf-inline-form"
-                                    onsubmit="return confirm('Are you sure you want to permanently delete this user?');"
-                                >
-
-                                    @csrf
-
-                                    @method('DELETE')
-
-
-                                    <button
-                                        type="submit"
-                                        class="qf-action-btn qf-action-delete"
-                                    >
-
-                                        <i class="bi bi-trash3-fill"></i>
-
-                                        Delete
-
-                                    </button>
-
-                                </form>
+                            </span>
 
                             @endif
 
                         </div>
 
                     </div>
+
+
+                    {{-- =====================================
+                             USER INFORMATION
+                        ====================================== --}}
+
+                    <div class="qf-user-info-grid">
+
+
+                        {{-- ROLE --}}
+
+                        <div class="qf-info-item">
+
+                            <div class="qf-info-label">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                Role
+
+                            </div>
+
+
+                            <div class="qf-info-value">
+
+                                @if (
+                                $user->role?->value ===
+                                \App\UserRole::SYSTEM_ADMINISTRATOR->value
+                                )
+
+                                <span class="qf-role qf-role-system">
+                                    System Administrator
+                                </span>
+
+                                @elseif (
+                                $user->role?->value ===
+                                \App\UserRole::COMPANY_ADMINISTRATOR->value
+                                )
+
+                                <span class="qf-role qf-role-admin">
+                                    Company Administrator
+                                </span>
+
+                                @elseif (
+                                $user->role?->value ===
+                                \App\UserRole::QUALITY_MANAGER->value
+                                )
+
+                                <span class="qf-role">
+                                    Quality Manager
+                                </span>
+
+                                @elseif (
+                                $user->role?->value ===
+                                \App\UserRole::QUALITY_ENGINEER->value
+                                )
+
+                                <span class="qf-role">
+                                    Quality Engineer
+                                </span>
+
+                                @elseif (
+                                $user->role?->value ===
+                                \App\UserRole::PRODUCTION_SUPERVISOR->value
+                                )
+
+                                <span class="qf-role">
+                                    Production Supervisor
+                                </span>
+
+                                @else
+
+                                <span class="qf-role qf-role-unassigned">
+                                    Not Assigned
+                                </span>
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- COMPANY --}}
+
+                        <div class="qf-info-item">
+
+                            <div class="qf-info-label">
+
+                                <i class="bi bi-building"></i>
+
+                                Company
+
+                            </div>
+
+
+                            <div class="qf-info-value">
+
+                                {{ $user->company?->name ?? 'No Company' }}
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- DEACTIVATED TIME --}}
+
+                        @if (!$user->is_active && $user->deactivated_at)
+
+                        <div class="qf-info-item">
+
+                            <div class="qf-info-label">
+
+                                <i class="bi bi-clock-history"></i>
+
+                                Deactivated
+
+                            </div>
+
+
+                            <div class="qf-info-value">
+
+                                {{ $user->deactivated_at->format('d M Y, h:i A') }}
+
+                            </div>
+
+                        </div>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- =====================================
+                             ACTIONS
+                        ====================================== --}}
+
+                    <div class="qf-user-actions">
+
+
+                        {{-- EDIT USER --}}
+
+                        {{-- EDIT USER --}}
+
+                        @if (
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::SYSTEM_ADMINISTRATOR
+                        )
+                        &&
+                        in_array($user->role?->value, [
+                        \App\UserRole::SYSTEM_ADMINISTRATOR->value,
+                        \App\UserRole::COMPANY_ADMINISTRATOR->value,
+                        ], true)
+                        )
+                        ||
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::COMPANY_ADMINISTRATOR
+                        )
+                        &&
+                        (int) auth()->user()->company_id === (int) $user->company_id
+                        &&
+                        in_array($user->role?->value, [
+                        \App\UserRole::QUALITY_MANAGER->value,
+                        \App\UserRole::QUALITY_ENGINEER->value,
+                        \App\UserRole::PRODUCTION_SUPERVISOR->value,
+                        ], true)
+                        )
+                        )
+
+                        <a
+                            href="{{ route('users.edit', $user) }}"
+                            class="qf-action-btn qf-action-edit">
+
+                            <i class="bi bi-pencil-square"></i>
+
+                            Edit
+
+                        </a>
+
+                        @endif
+
+
+                        {{-- ACTIVATE / DEACTIVATE --}}
+
+                        @if (
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::SYSTEM_ADMINISTRATOR
+                        )
+                        &&
+                        in_array($user->role?->value, [
+                        \App\UserRole::SYSTEM_ADMINISTRATOR->value,
+                        \App\UserRole::COMPANY_ADMINISTRATOR->value,
+                        ], true)
+                        )
+                        ||
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::COMPANY_ADMINISTRATOR
+                        )
+                        &&
+                        (int) auth()->user()->company_id === (int) $user->company_id
+                        &&
+                        in_array($user->role?->value, [
+                        \App\UserRole::QUALITY_MANAGER->value,
+                        \App\UserRole::QUALITY_ENGINEER->value,
+                        \App\UserRole::PRODUCTION_SUPERVISOR->value,
+                        ], true)
+                        )
+                        )
+
+                        {{-- Prevent deactivating another System Administrator --}}
+                        @if (
+                        !(
+                        $user->role?->value ===
+                        \App\UserRole::SYSTEM_ADMINISTRATOR->value
+                        &&
+                        $user->id !== auth()->id()
+                        )
+                        )
+
+                        <form
+                            method="POST"
+                            action="{{ route('users.toggle-status', $user) }}"
+                            class="qf-inline-form">
+
+                            @csrf
+                            @method('PATCH')
+
+                            @if ($user->is_active)
+
+                            <button
+                                type="submit"
+                                class="qf-action-btn qf-action-deactivate">
+
+                                <i class="bi bi-person-dash-fill"></i>
+                                Deactivate
+
+                            </button>
+
+                            @else
+
+                            <button
+                                type="submit"
+                                class="qf-action-btn qf-action-activate">
+
+                                <i class="bi bi-person-check-fill"></i>
+                                Activate
+
+                            </button>
+
+                            @endif
+
+                        </form>
+
+                        @endif
+
+                        @endif
+
+
+                        {{-- DELETE USER --}}
+
+                        @if (
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::SYSTEM_ADMINISTRATOR
+                        )
+                        &&
+                        $user->role?->value ===
+                        \App\UserRole::COMPANY_ADMINISTRATOR->value
+                        )
+                        ||
+                        (
+                        auth()->user()->hasRole(
+                        \App\UserRole::COMPANY_ADMINISTRATOR
+                        )
+                        &&
+                        (int) auth()->user()->company_id ===
+                        (int) $user->company_id
+                        &&
+                        in_array($user->role?->value, [
+                        \App\UserRole::QUALITY_MANAGER->value,
+                        \App\UserRole::QUALITY_ENGINEER->value,
+                        \App\UserRole::PRODUCTION_SUPERVISOR->value,
+                        ], true)
+                        )
+                        )
+
+                        <form
+                            method="POST"
+                            action="{{ route('users.destroy', $user) }}"
+                            class="qf-inline-form"
+                            onsubmit="return confirm('Are you sure you want to permanently delete this user?');">
+
+                            @csrf
+
+                            @method('DELETE')
+
+
+                            <button
+                                type="submit"
+                                class="qf-action-btn qf-action-delete">
+
+                                <i class="bi bi-trash3-fill"></i>
+
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                        @endif
+
+                    </div>
+
+                </div>
 
 
                 @empty
 
 
-                    {{-- =========================================
+                {{-- =========================================
                          EMPTY STATE
                     ========================================== --}}
 
-                    <div class="qf-empty-state">
+                <div class="qf-empty-state">
 
-                        <div class="qf-empty-icon">
+                    <div class="qf-empty-icon">
 
-                            <i class="bi bi-people"></i>
-
-                        </div>
-
-
-                        <h3>
-
-                            @if ($isCompanyAdmin)
-                                No Team Members Found
-                            @else
-                                No Users Found
-                            @endif
-
-                        </h3>
-
-
-                        <p>
-
-                            @if ($isCompanyAdmin)
-
-                                There are currently no users registered
-                                under your company.
-
-                            @else
-
-                                There are currently no users
-                                available in this directory.
-
-                            @endif
-
-                        </p>
-
-
-                        <a
-                            href="{{ route('users.create') }}"
-                            class="qf-primary-btn"
-                        >
-
-                            <i class="bi bi-person-plus-fill"></i>
-
-                            Create First User
-
-                        </a>
+                        <i class="bi bi-people"></i>
 
                     </div>
+
+
+                    <h3>
+
+                        @if ($isCompanyAdmin)
+                        No Team Members Found
+                        @else
+                        No Users Found
+                        @endif
+
+                    </h3>
+
+
+                    <p>
+
+                        @if ($isCompanyAdmin)
+
+                        There are currently no users registered
+                        under your company.
+
+                        @else
+
+                        There are currently no users
+                        available in this directory.
+
+                        @endif
+
+                    </p>
+
+
+                    <a
+                        href="{{ route('users.create') }}"
+                        class="qf-primary-btn">
+
+                        <i class="bi bi-person-plus-fill"></i>
+
+                        Create First User
+
+                    </a>
+
+                </div>
 
                 @endforelse
 
@@ -615,7 +634,6 @@
     ========================================================== --}}
 
     <style>
-
         /* =========================================================
            MAIN PAGE
         ========================================================== */
@@ -627,16 +645,12 @@
             padding: 42px 24px 60px;
 
             background:
-                radial-gradient(
-                    circle at 10% 0%,
+                radial-gradient(circle at 10% 0%,
                     rgba(8, 145, 178, 0.10),
-                    transparent 28%
-                ),
-                radial-gradient(
-                    circle at 90% 90%,
+                    transparent 28%),
+                radial-gradient(circle at 90% 90%,
                     rgba(37, 99, 235, 0.08),
-                    transparent 30%
-                ),
+                    transparent 30%),
                 #0b1220;
         }
 
@@ -832,11 +846,9 @@
             border-radius: 9px;
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     #0891b2,
-                    #0e7490
-                );
+                    #0e7490);
 
             color: #ffffff !important;
 
@@ -892,11 +904,9 @@
             border-radius: 15px;
 
             background:
-                linear-gradient(
-                    145deg,
+                linear-gradient(145deg,
                     rgba(22, 32, 49, 0.96),
-                    rgba(13, 23, 38, 0.98)
-                );
+                    rgba(13, 23, 38, 0.98));
 
             box-shadow:
                 0 8px 25px rgba(0, 0, 0, 0.20);
@@ -968,11 +978,9 @@
             border-radius: 12px;
 
             background:
-                linear-gradient(
-                    135deg,
+                linear-gradient(135deg,
                     rgba(8, 145, 178, 0.20),
-                    rgba(14, 116, 144, 0.12)
-                );
+                    rgba(14, 116, 144, 0.12));
 
             color: #67e8f9;
 
@@ -1490,7 +1498,6 @@
                 flex: 1;
             }
         }
-
     </style>
 
 </x-app-layout>

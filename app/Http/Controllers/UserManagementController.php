@@ -27,7 +27,6 @@ class UserManagementController extends Controller
         return view('users.index', compact('users'));
     }
 
-
     public function create()
     {
         $user = request()->user();
@@ -45,7 +44,6 @@ class UserManagementController extends Controller
         return view('users.create', compact('companies'));
     }
 
-
     public function store(Request $request)
     {
         $currentUser = $request->user();
@@ -56,7 +54,6 @@ class UserManagementController extends Controller
                 UserRole::COMPANY_ADMINISTRATOR->value,
             ]
             : [
-                UserRole::COMPANY_ADMINISTRATOR->value,
                 UserRole::QUALITY_MANAGER->value,
                 UserRole::QUALITY_ENGINEER->value,
                 UserRole::PRODUCTION_SUPERVISOR->value,
@@ -91,33 +88,24 @@ class UserManagementController extends Controller
             ],
 
             'company_id' => [
+                'required_if:role,' . UserRole::COMPANY_ADMINISTRATOR->value,
                 'nullable',
                 'integer',
                 'exists:companies,id',
             ],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Company Administrator restrictions
-        |--------------------------------------------------------------------------
-        */
-
+        // Company Administrator restrictions
         if ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
 
-            if ((int) $validated['company_id'] !== (int) $currentUser->company_id) {
+            if ((int) ($validated['company_id'] ?? 0) !== (int) $currentUser->company_id) {
                 abort(403);
             }
 
             $validated['company_id'] = $currentUser->company_id;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | System Administrator must not belong to a company
-        |--------------------------------------------------------------------------
-        */
-
+        // System Administrator must not belong to a company
         if ($validated['role'] === UserRole::SYSTEM_ADMINISTRATOR->value) {
             $validated['company_id'] = null;
         }
@@ -135,17 +123,11 @@ class UserManagementController extends Controller
             ->with('success', 'User created successfully.');
     }
 
-
     public function edit(User $user)
     {
         $currentUser = request()->user();
 
-        /*
-        |--------------------------------------------------------------------------
-        | System Administrator
-        |--------------------------------------------------------------------------
-        */
-
+        // System Administrator
         if ($currentUser->hasRole(UserRole::SYSTEM_ADMINISTRATOR)) {
 
             if (!in_array($user->role?->value, [
@@ -160,17 +142,17 @@ class UserManagementController extends Controller
                 ->get();
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Company Administrator
-        |--------------------------------------------------------------------------
-        */ else {
+        // Company Administrator
+        else {
 
             if ((int) $user->company_id !== (int) $currentUser->company_id) {
                 abort(403);
             }
 
-            if ($user->role?->value === UserRole::SYSTEM_ADMINISTRATOR->value) {
+            if (in_array($user->role?->value, [
+                UserRole::SYSTEM_ADMINISTRATOR->value,
+                UserRole::COMPANY_ADMINISTRATOR->value,
+            ], true)) {
                 abort(403);
             }
 
@@ -182,17 +164,11 @@ class UserManagementController extends Controller
         return view('users.edit', compact('user', 'companies'));
     }
 
-
     public function update(Request $request, User $user)
     {
         $currentUser = $request->user();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Determine permissions and allowed roles
-        |--------------------------------------------------------------------------
-        */
-
+        // Determine permissions and allowed roles
         if ($currentUser->hasRole(UserRole::SYSTEM_ADMINISTRATOR)) {
 
             if (!in_array($user->role?->value, [
@@ -212,24 +188,21 @@ class UserManagementController extends Controller
                 abort(403);
             }
 
-            if ($user->role?->value === UserRole::SYSTEM_ADMINISTRATOR->value) {
+            if (in_array($user->role?->value, [
+                UserRole::SYSTEM_ADMINISTRATOR->value,
+                UserRole::COMPANY_ADMINISTRATOR->value,
+            ], true)) {
                 abort(403);
             }
 
             $allowedRoles = [
-                UserRole::COMPANY_ADMINISTRATOR->value,
                 UserRole::QUALITY_MANAGER->value,
                 UserRole::QUALITY_ENGINEER->value,
                 UserRole::PRODUCTION_SUPERVISOR->value,
             ];
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Validation
-        |--------------------------------------------------------------------------
-        */
-
+        // Validation
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -253,31 +226,22 @@ class UserManagementController extends Controller
             ],
 
             'company_id' => [
+                'required_if:role,' . UserRole::COMPANY_ADMINISTRATOR->value,
                 'nullable',
                 'integer',
                 'exists:companies,id',
             ],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | System Administrator must not belong to a company
-        |--------------------------------------------------------------------------
-        */
-
+        // System Administrator must not belong to a company
         if ($validated['role'] === UserRole::SYSTEM_ADMINISTRATOR->value) {
             $validated['company_id'] = null;
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Company Administrator must stay inside own company
-        |--------------------------------------------------------------------------
-        */
-
+        // Company Administrator must stay inside own company
         if ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
 
-            if ((int) $validated['company_id'] !== (int) $currentUser->company_id) {
+            if ((int) ($validated['company_id'] ?? 0) !== (int) $currentUser->company_id) {
                 abort(403);
             }
 
@@ -291,21 +255,13 @@ class UserManagementController extends Controller
             ->with('success', 'User updated successfully.');
     }
 
-
     public function toggleStatus(User $user)
     {
         $currentUser = request()->user();
 
-        /*
-        |--------------------------------------------------------------------------
-        | System Administrator rules
-        |--------------------------------------------------------------------------
-        */
-
+        // System Administrator rules
         if ($currentUser->hasRole(UserRole::SYSTEM_ADMINISTRATOR)) {
 
-            // System Admin can only manage System Admins
-            // and Company Administrators.
             if (!in_array($user->role?->value, [
                 UserRole::SYSTEM_ADMINISTRATOR->value,
                 UserRole::COMPANY_ADMINISTRATOR->value,
@@ -313,13 +269,7 @@ class UserManagementController extends Controller
                 abort(403);
             }
 
-            /*
-            |--------------------------------------------------------------------------
-            | A System Administrator cannot deactivate
-            | another System Administrator.
-            |--------------------------------------------------------------------------
-            */
-
+            // A System Administrator cannot deactivate another System Administrator
             if (
                 $user->role?->value === UserRole::SYSTEM_ADMINISTRATOR->value
                 && $user->id !== $currentUser->id
@@ -328,31 +278,27 @@ class UserManagementController extends Controller
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Company Administrator rules
-        |--------------------------------------------------------------------------
-        */ elseif ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
+        // Company Administrator rules
+        elseif ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
 
             if ((int) $user->company_id !== (int) $currentUser->company_id) {
                 abort(403);
             }
+
+            if (in_array($user->role?->value, [
+                UserRole::SYSTEM_ADMINISTRATOR->value,
+                UserRole::COMPANY_ADMINISTRATOR->value,
+            ], true)) {
+                abort(403);
+            }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Other roles cannot use this management action
-        |--------------------------------------------------------------------------
-        */ else {
+        // Other roles cannot use this management action
+        else {
             abort(403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Toggle account status
-        |--------------------------------------------------------------------------
-        */
-
+        // Toggle account status
         if ($user->is_active) {
 
             $user->update([
@@ -376,37 +322,32 @@ class UserManagementController extends Controller
     {
         $currentUser = request()->user();
 
-        /*
-    |--------------------------------------------------------------------------
-    | System Administrator rules
-    |--------------------------------------------------------------------------
-    */
-
+        // System Administrator rules
         if ($currentUser->hasRole(UserRole::SYSTEM_ADMINISTRATOR)) {
 
-            // System Admin can delete only Company Administrators.
+            // System Admin can delete only Company Administrators
             if ($user->role?->value !== UserRole::COMPANY_ADMINISTRATOR->value) {
                 abort(403);
             }
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Company Administrator rules
-    |--------------------------------------------------------------------------
-    */ elseif ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
+        // Company Administrator rules
+        elseif ($currentUser->hasRole(UserRole::COMPANY_ADMINISTRATOR)) {
 
-            // Company Admin can delete users only from their own company.
             if ((int) $user->company_id !== (int) $currentUser->company_id) {
+                abort(403);
+            }
+
+            if (in_array($user->role?->value, [
+                UserRole::SYSTEM_ADMINISTRATOR->value,
+                UserRole::COMPANY_ADMINISTRATOR->value,
+            ], true)) {
                 abort(403);
             }
         }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Other roles cannot delete users
-    |--------------------------------------------------------------------------
-    */ else {
+        // Other roles cannot delete users
+        else {
             abort(403);
         }
 
