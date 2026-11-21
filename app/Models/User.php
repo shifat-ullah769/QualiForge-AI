@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use App\UserRole;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Company;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -66,8 +65,18 @@ class User extends Authenticatable
         return $this->role === $role;
     }
 
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(UserAssignment::class);
+    }
+
+    public function assignedByOthers(): HasMany
+    {
+        return $this->hasMany(UserAssignment::class, 'assigned_by');
     }
 }
