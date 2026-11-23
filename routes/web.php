@@ -54,6 +54,10 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         Route::get('/datasets/{id}', [DatasetController::class, 'show'])
             ->whereNumber('id')
             ->name('datasets.show');
+
+        Route::post('/datasets/{id}/validate', [DatasetController::class, 'validate'])
+            ->whereNumber('id')
+            ->name('datasets.validate');
     });
 
     /*

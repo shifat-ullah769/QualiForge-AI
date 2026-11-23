@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use App\Services\DatasetFileInspector;
 use Throwable;
 
 class DatasetController extends Controller
@@ -142,6 +143,8 @@ class DatasetController extends Controller
 
         $file = $request->file('file');
 
+
+        // Store uploaded file
         $path = $file->store(
             "datasets/company-{$companyId}",
             'local'
@@ -167,6 +170,9 @@ class DatasetController extends Controller
 
                 'status' => 'uploaded',
                 'validation_status' => 'pending',
+                'row_count' => null,
+                'column_count' => null,
+                'validated_at' => null,
             ]);
         } catch (Throwable $exception) {
             Storage::disk('local')->delete($path);
@@ -189,5 +195,60 @@ class DatasetController extends Controller
             ->findOrFail($id);
 
         return view('quality-engineer.datasets.show', compact('dataset'));
+    }
+
+    public function validate(
+        Request $request,
+        int $id,
+        DatasetFileInspector $inspector
+    ) {
+        $companyId = $request->user()->company_id;
+
+        abort_unless($companyId, 403);
+
+        $dataset = Dataset::where('company_id', $companyId)
+            ->findOrFail($id);
+
+        // Prevent unnecessary re-validation of an already passed dataset
+        if ($dataset->validation_status === 'passed') {
+            return redirect()
+                ->route('qe.datasets.show', $dataset->id)
+                ->with('success', 'This dataset has already passed validation.');
+        }
+
+        try {
+            $fullPath = Storage::disk($dataset->disk)
+                ->path($dataset->stored_path);
+
+            if (!Storage::disk($dataset->disk)->exists($dataset->stored_path)) {
+                throw ValidationException::withMessages([
+                    'file' => 'The stored dataset file could not be found.',
+                ]);
+            }
+
+            $inspection = $inspector->inspectPath($fullPath);
+
+            $dataset->update([
+                'validation_status' => 'passed',
+                'row_count' => $inspection['row_count'],
+                'column_count' => $inspection['column_count'],
+                'validation_errors' => null,
+                'validated_at' => now(),
+            ]);
+
+            return redirect()
+                ->route('qe.datasets.show', $dataset->id)
+                ->with('success', 'Dataset validation completed successfully.');
+        } catch (ValidationException $exception) {
+            $dataset->update([
+                'validation_status' => 'failed',
+                'validation_errors' => $exception->errors(),
+                'validated_at' => now(),
+            ]);
+
+            return redirect()
+                ->route('qe.datasets.show', $dataset->id)
+                ->with('error', 'Dataset validation failed. Please review the errors.');
+        }
     }
 }

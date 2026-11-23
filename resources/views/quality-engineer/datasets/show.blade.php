@@ -132,6 +132,35 @@
                 font-size: 13px;
             }
 
+
+            .qf-validate-form {
+                margin-top: 24px;
+                padding-top: 20px;
+                border-top: 1px solid #1e334a;
+            }
+
+            .qf-validate-button {
+                padding: 11px 20px;
+                border: none;
+                border-radius: 8px;
+                background: linear-gradient(135deg, #0891b2, #06b6d4);
+                color: #ffffff;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: 0.2s ease;
+            }
+
+            .qf-validate-button:hover {
+                background: linear-gradient(135deg, #0e7490, #0891b2);
+                transform: translateY(-1px);
+            }
+
+            .qf-validate-button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
             @media (max-width: 640px) {
                 .qf-dataset-details-page {
                     padding: 20px 12px;
@@ -188,7 +217,7 @@
                                 @else
                                 {{ number_format($dataset->file_size_bytes / 1048576, 2) }} MB
                                 @endif
-                        </p>
+                                </p>
                     </div>
 
                     <div class="qf-details-field">
@@ -266,6 +295,25 @@
                         <label>Last Validated</label>
                         <p>{{ $dataset->validated_at?->format('d M Y, h:i A') ?? 'Not validated yet' }}</p>
                     </div>
+                    @if ($dataset->validation_status !== 'passed')
+                    <form
+                        action="{{ route('qe.datasets.validate', $dataset->id) }}"
+                        method="POST"
+                        class="qf-validate-form"
+                        onsubmit="return confirm('Are you sure you want to validate this dataset?')">
+                        @csrf
+
+                        <button type="submit" class="qf-validate-button">
+                            Validate Dataset
+                        </button>
+                    </form>
+                    @else
+                    <div class="qf-validate-form">
+                        <span class="qf-details-status passed">
+                            Dataset Validation Completed
+                        </span>
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -277,10 +325,17 @@
                     <strong>Recorded validation information</strong>
 
                     <ul>
-                        @foreach ($dataset->validation_errors as $error)
+                        @foreach ($dataset->validation_errors as $field => $errors)
+                        @if (is_array($errors))
+                        @foreach ($errors as $error)
                         <li>
-                            {{ is_array($error) ? json_encode($error) : $error }}
+                            <strong>{{ ucfirst($field) }}:</strong>
+                            {{ $error }}
                         </li>
+                        @endforeach
+                        @else
+                        <li>{{ $errors }}</li>
+                        @endif
                         @endforeach
                     </ul>
                 </div>
