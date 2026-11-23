@@ -5,6 +5,7 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\CompanyManagementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\QualityEngineer\DatasetController;
 
 
 Route::get('/', function () {
@@ -27,9 +28,31 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
     */
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware('verified')
-    ->name('dashboard');
+        ->middleware('verified')
+        ->name('dashboard');
 
+
+    /*
+|--------------------------------------------------------------------------
+| Quality Engineer - Dataset Management
+|--------------------------------------------------------------------------
+*/
+
+    Route::middleware('role:quality_engineer')->prefix('qe')->name('qe.')->group(function () {
+
+        Route::get('/datasets', [DatasetController::class, 'index'])
+            ->name('datasets.index');
+
+        Route::get('/datasets/create', [DatasetController::class, 'create'])
+            ->name('datasets.create');
+
+        Route::post('/datasets', [DatasetController::class, 'store'])
+            ->name('datasets.store');
+
+        Route::get('/datasets/{id}', [DatasetController::class, 'show'])
+            ->whereNumber('id')
+            ->name('datasets.show');
+    });
 
     /*
     |--------------------------------------------------------------------------

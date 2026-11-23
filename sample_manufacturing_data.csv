@@ -1,0 +1,6 @@
+﻿production_date,batch_number,product_code,target_quantity,produced_quantity,defect_quantity,defect_type,inspection_result
+2026-01-05,BATCH-001,PROD-A,1000,985,15,Surface Defect,Failed
+2026-01-06,BATCH-002,PROD-A,1000,998,2,None,Passed
+2026-01-07,BATCH-003,PROD-B,1200,1180,20,Dimension Error,Failed
+2026-01-08,BATCH-004,PROD-B,1200,1195,5,None,Passed
+2026-01-09,BATCH-005,PROD-A,1000,990,10,Color Defect,Failed
