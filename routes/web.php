@@ -6,7 +6,7 @@ use App\Http\Controllers\CompanyManagementController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QualityEngineer\DatasetController;
-
+use App\Http\Controllers\CompanyAdmin\ManufacturingSetupController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -124,6 +124,30 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             ->name('companies.toggle-status');
     });
 
+
+    /*
+|--------------------------------------------------------------------------
+| Company Administrator - Manufacturing Setup
+|--------------------------------------------------------------------------
+*/
+
+    Route::middleware('role:company_administrator')
+        ->prefix('company-admin')
+        ->name('company-admin.')
+        ->group(function () {
+
+            Route::get('/manufacturing', [ManufacturingSetupController::class, 'index'])
+                ->name('manufacturing.index');
+
+            Route::post('/factories', [ManufacturingSetupController::class, 'storeFactory'])
+                ->name('factories.store');
+
+            Route::post('/production-lines', [ManufacturingSetupController::class, 'storeProductionLine'])
+                ->name('production-lines.store');
+
+            Route::post('/machines', [ManufacturingSetupController::class, 'storeMachine'])
+                ->name('machines.store');
+        });
 
     /*
     |--------------------------------------------------------------------------

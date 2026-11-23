@@ -155,6 +155,9 @@ class DashboardController extends Controller
                 'qualityManagers' => 0,
                 'qualityEngineers' => 0,
                 'productionSupervisors' => 0,
+                'totalFactories' => 0,
+                'totalProductionLines' => 0,
+                'totalMachines' => 0,
             ]);
         }
 
@@ -196,6 +199,13 @@ class DashboardController extends Controller
             )
             ->count();
 
+        // Manufacturing Overview
+        $totalFactories = $company->factories()->count();
+
+        $totalProductionLines = $company->productionLines()->count();
+
+        $totalMachines = $company->machines()->count();
+
         $recentlyCreatedUsers = $company->users()
             ->latest('created_at')
             ->take(5)
@@ -221,7 +231,10 @@ class DashboardController extends Controller
             'productionSupervisors',
             'recentlyCreatedUsers',
             'recentlyUpdatedUsers',
-            'inactiveUsersList'
+            'inactiveUsersList',
+            'totalFactories',
+            'totalProductionLines',
+            'totalMachines'
         ));
     }
 }

@@ -1592,6 +1592,52 @@
                 </section>
 
 
+
+                {{-- Manufacturing Overview --}}
+                <section class="qf-dashboard-card">
+
+                    <div class="qf-dashboard-card-header">
+                        <div class="qf-dashboard-icon cyan">
+                            <i class="bi bi-buildings"></i>
+                        </div>
+
+                        <div>
+                            <h3>Manufacturing Overview</h3>
+                            <p>Your company's manufacturing infrastructure</p>
+                        </div>
+                    </div>
+
+                    <div class="qf-dashboard-card-body">
+
+                        <div class="qf-team-stats">
+
+                            <div class="qf-team-stat">
+                                <span>Total Factories</span>
+                                <strong>{{ $totalFactories }}</strong>
+                            </div>
+
+                            <div class="qf-team-stat">
+                                <span>Production Lines</span>
+                                <strong>{{ $totalProductionLines }}</strong>
+                            </div>
+
+                            <div class="qf-team-stat">
+                                <span>Total Machines</span>
+                                <strong>{{ $totalMachines }}</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ route('company-admin.manufacturing.index') }}"
+                            class="qf-dashboard-link">
+                            Manage Manufacturing Setup
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    </div>
+                </section>
+
+
                 {{-- Recent Team Activity --}}
                 <section class="qf-dashboard-card">
 
