@@ -8,7 +8,10 @@
                 color: #e5edf7;
             }
 
-            .qf-mfg-container { max-width: 1400px; margin: auto; }
+            .qf-mfg-container {
+                max-width: 1400px;
+                margin: auto;
+            }
 
             .qf-mfg-header {
                 display: flex;
@@ -26,7 +29,11 @@
                 color: #f8fafc;
             }
 
-            .qf-mfg-header p { margin: 0; color: #94a3b8; font-size: 13px; }
+            .qf-mfg-header p {
+                margin: 0;
+                color: #94a3b8;
+                font-size: 13px;
+            }
 
             .qf-mfg-stats {
                 display: grid;
@@ -81,7 +88,9 @@
                 gap: 17px;
             }
 
-            .qf-mfg-field.full { grid-column: 1 / -1; }
+            .qf-mfg-field.full {
+                grid-column: 1 / -1;
+            }
 
             .qf-mfg-field label {
                 display: block;
@@ -127,9 +136,13 @@
                 cursor: pointer;
             }
 
-            .qf-mfg-submit:hover { opacity: .9; }
+            .qf-mfg-submit:hover {
+                opacity: .9;
+            }
 
-            .qf-mfg-table-wrap { overflow-x: auto; }
+            .qf-mfg-table-wrap {
+                overflow-x: auto;
+            }
 
             .qf-mfg-table {
                 width: 100%;
@@ -165,8 +178,8 @@
                 padding: 13px 16px;
                 margin-bottom: 20px;
                 border-radius: 9px;
-                background: rgba(22,163,74,.12);
-                border: 1px solid rgba(22,163,74,.3);
+                background: rgba(22, 163, 74, .12);
+                border: 1px solid rgba(22, 163, 74, .3);
                 color: #86efac;
                 font-size: 13px;
             }
@@ -175,29 +188,72 @@
                 padding: 13px 16px;
                 margin-bottom: 20px;
                 border-radius: 9px;
-                background: rgba(220,38,38,.1);
-                border: 1px solid rgba(220,38,38,.3);
+                background: rgba(220, 38, 38, .1);
+                border: 1px solid rgba(220, 38, 38, .3);
                 color: #fca5a5;
                 font-size: 13px;
             }
 
-            .qf-mfg-errors ul { margin: 8px 0 0; padding-left: 20px; }
+            .qf-mfg-errors ul {
+                margin: 8px 0 0;
+                padding-left: 20px;
+            }
 
             .qf-mfg-badge {
                 display: inline-block;
                 padding: 5px 9px;
                 border-radius: 20px;
-                background: rgba(22,163,74,.13);
+                background: rgba(22, 163, 74, .13);
                 color: #86efac;
                 font-size: 11px;
             }
 
+            .qf-mfg-badge.inactive {
+                background: rgba(220, 38, 38, .13);
+                color: #fca5a5;
+            }
+
+            .qf-mfg-action {
+                padding: 7px 12px;
+                border: 1px solid;
+                border-radius: 7px;
+                font-size: 11px;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .qf-mfg-action.deactivate {
+                background: rgba(220, 38, 38, .1);
+                border-color: rgba(220, 38, 38, .4);
+                color: #fca5a5;
+            }
+
+            .qf-mfg-action.activate {
+                background: rgba(22, 163, 74, .1);
+                border-color: rgba(22, 163, 74, .4);
+                color: #86efac;
+            }
+
             @media(max-width: 700px) {
-                .qf-manufacturing-page { padding: 20px 12px; }
-                .qf-mfg-stats { grid-template-columns: 1fr; }
-                .qf-mfg-form-grid { grid-template-columns: 1fr; }
-                .qf-mfg-field.full { grid-column: auto; }
-                .qf-mfg-card { padding: 18px; }
+                .qf-manufacturing-page {
+                    padding: 20px 12px;
+                }
+
+                .qf-mfg-stats {
+                    grid-template-columns: 1fr;
+                }
+
+                .qf-mfg-form-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .qf-mfg-field.full {
+                    grid-column: auto;
+                }
+
+                .qf-mfg-card {
+                    padding: 18px;
+                }
             }
         </style>
 
@@ -211,18 +267,18 @@
             </div>
 
             @if(session('success'))
-                <div class="qf-mfg-alert">{{ session('success') }}</div>
+            <div class="qf-mfg-alert">{{ session('success') }}</div>
             @endif
 
             @if($errors->any())
-                <div class="qf-mfg-errors">
-                    <strong>Please correct the following errors:</strong>
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="qf-mfg-errors">
+                <strong>Please correct the following errors:</strong>
+                <ul>
+                    @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
             <div class="qf-mfg-stats">
@@ -303,32 +359,32 @@
                 <h2>Existing Factories</h2>
 
                 @if($factories->isEmpty())
-                    <div class="qf-mfg-empty">No factories registered yet.</div>
+                <div class="qf-mfg-empty">No factories registered yet.</div>
                 @else
-                    <div class="qf-mfg-table-wrap">
-                        <table class="qf-mfg-table">
-                            <thead>
-                                <tr>
-                                    <th>Factory</th>
-                                    <th>Code</th>
-                                    <th>City</th>
-                                    <th>Production Lines</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($factories as $factory)
-                                    <tr>
-                                        <td>{{ $factory->name }}</td>
-                                        <td>{{ $factory->factory_code }}</td>
-                                        <td>{{ $factory->city ?? '—' }}</td>
-                                        <td>{{ $factory->productionLines->count() }}</td>
-                                        <td><span class="qf-mfg-badge">{{ $factory->status }}</span></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="qf-mfg-table-wrap">
+                    <table class="qf-mfg-table">
+                        <thead>
+                            <tr>
+                                <th>Factory</th>
+                                <th>Code</th>
+                                <th>City</th>
+                                <th>Production Lines</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($factories as $factory)
+                            <tr>
+                                <td>{{ $factory->name }}</td>
+                                <td>{{ $factory->factory_code }}</td>
+                                <td>{{ $factory->city ?? '—' }}</td>
+                                <td>{{ $factory->productionLines->count() }}</td>
+                                <td><span class="qf-mfg-badge">{{ $factory->status }}</span></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 @endif
             </div>
 
@@ -348,7 +404,7 @@
                             <select name="factory_id" required>
                                 <option value="">Select Factory</option>
                                 @foreach($factories as $factory)
-                                    <option value="{{ $factory->id }}">{{ $factory->name }}</option>
+                                <option value="{{ $factory->id }}">{{ $factory->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -383,32 +439,32 @@
                 <h2>Existing Production Lines</h2>
 
                 @if($productionLines->isEmpty())
-                    <div class="qf-mfg-empty">No production lines registered yet.</div>
+                <div class="qf-mfg-empty">No production lines registered yet.</div>
                 @else
-                    <div class="qf-mfg-table-wrap">
-                        <table class="qf-mfg-table">
-                            <thead>
-                                <tr>
-                                    <th>Line</th>
-                                    <th>Code</th>
-                                    <th>Factory</th>
-                                    <th>Machines</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($productionLines as $line)
-                                    <tr>
-                                        <td>{{ $line->name }}</td>
-                                        <td>{{ $line->code }}</td>
-                                        <td>{{ $line->factory?->name ?? '—' }}</td>
-                                        <td>{{ $line->machines->count() }}</td>
-                                        <td><span class="qf-mfg-badge">{{ $line->status }}</span></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="qf-mfg-table-wrap">
+                    <table class="qf-mfg-table">
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Code</th>
+                                <th>Factory</th>
+                                <th>Machines</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($productionLines as $line)
+                            <tr>
+                                <td>{{ $line->name }}</td>
+                                <td>{{ $line->code }}</td>
+                                <td>{{ $line->factory?->name ?? '—' }}</td>
+                                <td>{{ $line->machines->count() }}</td>
+                                <td><span class="qf-mfg-badge">{{ $line->status }}</span></td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 @endif
             </div>
 
@@ -428,9 +484,9 @@
                             <select name="production_line_id" required>
                                 <option value="">Select Production Line</option>
                                 @foreach($productionLines as $line)
-                                    <option value="{{ $line->id }}">
-                                        {{ $line->name }} ({{ $line->factory?->name ?? 'Factory' }})
-                                    </option>
+                                <option value="{{ $line->id }}">
+                                    {{ $line->name }} ({{ $line->factory?->name ?? 'Factory' }})
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -480,39 +536,64 @@
                 </form>
             </div>
 
+
             <!-- Machine List -->
             <div class="qf-mfg-card">
                 <h2>Registered Machines</h2>
+                <p class="qf-mfg-description">
+                    Monitor machine status and manage machine availability.
+                </p>
 
                 @if($machines->isEmpty())
-                    <div class="qf-mfg-empty">No machines registered yet.</div>
+                <div class="qf-mfg-empty">No machines registered yet.</div>
                 @else
-                    <div class="qf-mfg-table-wrap">
-                        <table class="qf-mfg-table">
-                            <thead>
-                                <tr>
-                                    <th>Machine</th>
-                                    <th>Code</th>
-                                    <th>Production Line</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($machines as $machine)
-                                    <tr>
-                                        <td>{{ $machine->name }}</td>
-                                        <td>{{ $machine->machine_code }}</td>
-                                        <td>{{ $machine->productionLine?->name ?? '—' }}</td>
-                                        <td>{{ $machine->machine_type ?? '—' }}</td>
-                                        <td><span class="qf-mfg-badge">{{ $machine->status }}</span></td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="qf-mfg-table-wrap">
+                    <table class="qf-mfg-table">
+                        <thead>
+                            <tr>
+                                <th>Machine</th>
+                                <th>Code</th>
+                                <th>Production Line</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach($machines as $machine)
+                            <tr>
+                                <td>{{ $machine->name }}</td>
+                                <td>{{ $machine->machine_code }}</td>
+                                <td>{{ $machine->productionLine?->name ?? '—' }}</td>
+                                <td>{{ $machine->machine_type ?? '—' }}</td>
+                                <td>
+                                    <span class="qf-mfg-badge {{ $machine->status === 'active' ? '' : 'inactive' }}">
+                                        {{ ucfirst($machine->status) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="POST"
+                                        action="{{ route('company-admin.machines.toggle-status', $machine->id) }}"
+                                       onsubmit="return confirm('Are you sure you want to change this machine status?')">
+
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <button type="submit"
+                                            class="qf-mfg-action {{ $machine->status === 'active' ? 'deactivate' : 'activate' }}">
+                                            {{ $machine->status === 'active' ? 'Deactivate' : 'Activate' }}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 @endif
             </div>
+
 
         </div>
     </div>

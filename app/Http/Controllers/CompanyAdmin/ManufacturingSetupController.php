@@ -156,4 +156,27 @@ class ManufacturingSetupController extends Controller
 
         return back()->with('success', 'Machine created successfully.');
     }
+    public function toggleMachineStatus(Request $request, int $id)
+    {
+        $companyId = $request->user()->company_id;
+
+        abort_unless($companyId, 403);
+
+        $machine = Machine::where('company_id', $companyId)
+            ->whereKey($id)
+            ->firstOrFail();
+
+        $machine->update([
+            'status' => $machine->status === 'active'
+                ? 'inactive'
+                : 'active',
+        ]);
+
+        return redirect()
+            ->route('company-admin.manufacturing.index')
+            ->with(
+                'success',
+                'Machine status updated successfully.'
+            );
+    }
 }

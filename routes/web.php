@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QualityEngineer\DatasetController;
 use App\Http\Controllers\CompanyAdmin\ManufacturingSetupController;
+use App\Http\Controllers\CompanyAdmin\UserAssignmentController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -147,6 +149,20 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
 
             Route::post('/machines', [ManufacturingSetupController::class, 'storeMachine'])
                 ->name('machines.store');
+
+            Route::get('/assignments', [UserAssignmentController::class, 'index'])
+                ->name('assignments.index');
+
+            Route::post('/assignments', [UserAssignmentController::class, 'store'])
+                ->name('assignments.store');
+
+            Route::patch('/assignments/{id}/end', [UserAssignmentController::class, 'end'])
+                ->whereNumber('id')
+                ->name('assignments.end');
+
+            Route::patch('/machines/{id}/toggle-status', [ManufacturingSetupController::class, 'toggleMachineStatus'])
+                ->whereNumber('id')
+                ->name('machines.toggle-status');
         });
 
     /*

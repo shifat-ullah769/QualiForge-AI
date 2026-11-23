@@ -158,6 +158,9 @@ class DashboardController extends Controller
                 'totalFactories' => 0,
                 'totalProductionLines' => 0,
                 'totalMachines' => 0,
+                'totalAssignments' => 0,
+                'activeAssignments' => 0,
+                'assignedEngineers' => 0,
             ]);
         }
 
@@ -199,6 +202,17 @@ class DashboardController extends Controller
             )
             ->count();
 
+        $totalAssignments = $company->assignments()->count();
+
+        $activeAssignments = $company->assignments()
+            ->where('status', 'active')
+            ->count();
+
+        $assignedEngineers = $company->assignments()
+            ->where('status', 'active')
+            ->distinct('user_id')
+            ->count('user_id');
+
         // Manufacturing Overview
         $totalFactories = $company->factories()->count();
 
@@ -234,7 +248,10 @@ class DashboardController extends Controller
             'inactiveUsersList',
             'totalFactories',
             'totalProductionLines',
-            'totalMachines'
+            'totalMachines',
+            'totalAssignments',
+            'activeAssignments',
+            'assignedEngineers'
         ));
     }
 }

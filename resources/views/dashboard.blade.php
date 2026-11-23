@@ -1637,6 +1637,51 @@
                     </div>
                 </section>
 
+                {{-- User Assignment Overview --}}
+                <section class="qf-dashboard-card">
+
+                    <div class="qf-dashboard-card-header">
+                        <div class="qf-dashboard-icon purple">
+                            <i class="bi bi-person-workspace"></i>
+                        </div>
+
+                        <div>
+                            <h3>User Assignment Overview</h3>
+                            <p>Monitor your company's workforce assignments</p>
+                        </div>
+                    </div>
+
+                    <div class="qf-dashboard-card-body">
+
+                        <div class="qf-team-stats">
+
+                            <div class="qf-team-stat">
+                                <span>Total Assignments</span>
+                                <strong>{{ $totalAssignments }}</strong>
+                            </div>
+
+                            <div class="qf-team-stat">
+                                <span>Active Assignments</span>
+                                <strong class="qf-number-green">
+                                    {{ $activeAssignments }}
+                                </strong>
+                            </div>
+
+                            <div class="qf-team-stat">
+                                <span>Assigned Engineers</span>
+                                <strong>{{ $assignedEngineers }}</strong>
+                            </div>
+
+                        </div>
+
+                        <a href="{{ route('company-admin.assignments.index') }}"
+                            class="qf-dashboard-link">
+                            Manage User Assignments
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    </div>
+                </section>
 
                 {{-- Recent Team Activity --}}
                 <section class="qf-dashboard-card">
