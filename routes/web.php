@@ -12,6 +12,7 @@ use App\Http\Controllers\QualityEngineer\PredictionController;
 use App\Http\Controllers\QualityEngineer\DefectController;
 use App\Http\Controllers\QualityEngineer\InspectionController;
 use App\Http\Controllers\QualityEngineer\AlertController;
+use App\Http\Controllers\QualityEngineer\RootCauseAnalysisController;
 
 
 
@@ -99,6 +100,11 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         // Quality Alerts
         Route::get('/alerts', [AlertController::class, 'index'])
             ->name('alerts.index');
+
+        // Root Cause Analysis
+        Route::get('/root-cause-analysis', [RootCauseAnalysisController::class, 'index'])
+            ->name('root-cause-analysis.index');
+
         // Inspection Management
         Route::get('/inspections', [InspectionController::class, 'index'])
             ->name('inspections.index');
