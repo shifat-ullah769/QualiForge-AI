@@ -1432,21 +1432,466 @@
                  QUALITY ENGINEER DASHBOARD
             ====================================================== --}}
 
+
             <div class="qf-qe-dashboard">
 
-                <h1>Quality Engineer Dashboard</h1>
-
-                <p>
-                    Monitor inspections, defects and manufacturing quality.
-                </p>
-
-                <div class="qf-qe-company">
-                    <strong>Assigned Company:</strong>
-
-                    {{ $company?->name ?? 'No company assigned' }}
+                <div class="qf-qe-header">
+                    <div>
+                        <span class="qf-qe-eyebrow">MANUFACTURING QUALITY INTELLIGENCE</span>
+                        <h1>Welcome back, {{ $user->name }}!</h1>
+                        <p>Monitor your company's datasets, predictions, inspections and defects from one place.</p>
+                    </div>
+                    <div class="qf-qe-company">
+                        <i class="bi bi-building"></i>
+                        <span>{{ $company?->name ?? 'No company assigned' }}</span>
+                    </div>
                 </div>
 
+                @if($company)
+
+                <div class="qf-qe-section-title">
+                    <h2>Quality Overview</h2>
+                    <span>Company-wide records</span>
+                </div>
+
+                <div class="qf-qe-stats">
+
+                    <a href="{{ route('qe.datasets.index') }}" class="qf-qe-stat">
+                        <i class="bi bi-database"></i>
+                        <span>Total Datasets</span>
+                        <strong>{{ $totalDatasets }}</strong>
+                        <small>{{ $validatedDatasets }} validated</small>
+                    </a>
+
+                    <a href="{{ route('qe.predictions.index') }}" class="qf-qe-stat">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Total Predictions</span>
+                        <strong>{{ $totalPredictions }}</strong>
+                        <small>{{ $completedPredictions }} completed</small>
+                    </a>
+
+                    <a href="{{ route('qe.defects.index') }}" class="qf-qe-stat">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Total Defects</span>
+                        <strong>{{ $totalDefects }}</strong>
+                        <small>{{ $openDefects }} open / investigating</small>
+                    </a>
+
+                    <a href="{{ route('qe.inspections.index') }}" class="qf-qe-stat">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span>Total Inspections</span>
+                        <strong>{{ $totalInspections }}</strong>
+                        <small>{{ $completedInspections }} completed</small>
+                    </a>
+
+                </div>
+
+                <div class="qf-qe-section-title">
+                    <h2>Quality Attention</h2>
+                    <span>Items that may require review</span>
+                </div>
+
+                <div class="qf-qe-attention">
+
+                    <div>
+                        <span>Pending Dataset Validation</span>
+                        <strong>{{ $pendingDatasets }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Failed Dataset Validation</span>
+                        <strong>{{ $failedDatasets }}</strong>
+                    </div>
+
+                    <div>
+                        <span>High / Critical Open Defects</span>
+                        <strong>{{ $highPriorityDefects }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Failed Inspections</span>
+                        <strong>{{ $failedInspections }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Scheduled Inspections</span>
+                        <strong>{{ $scheduledInspections }}</strong>
+                    </div>
+
+                </div>
+
+                <div class="qf-qe-section-title">
+                    <h2>Quality Management Modules</h2>
+                    <span>Access your workspace</span>
+                </div>
+
+                <div class="qf-qe-modules">
+
+                    <a href="{{ route('qe.datasets.index') }}">
+                        <i class="bi bi-database"></i>
+                        <strong>Dataset Management</strong>
+                        <span>Upload, validate and manage manufacturing datasets.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.predictions.index') }}">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <strong>Prediction Management</strong>
+                        <span>Run and review quality prediction results.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.defects.index') }}">
+                        <i class="bi bi-exclamation-diamond"></i>
+                        <strong>Defect Management</strong>
+                        <span>Record, investigate and monitor defects.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.inspections.index') }}">
+                        <i class="bi bi-clipboard-check"></i>
+                        <strong>Inspection Management</strong>
+                        <span>Create inspections and review their results.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.alerts.index') }}">
+                        <i class="bi bi-bell"></i>
+                        <strong>Quality Alerts</strong>
+                        <span>Review active quality alerts and issues.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.root-cause-analysis.index') }}">
+                        <i class="bi bi-search"></i>
+                        <strong>Root Cause Analysis</strong>
+                        <span>Explore defect patterns across machines and lines.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                    <a href="{{ route('qe.reports.index') }}">
+                        <i class="bi bi-file-earmark-bar-graph"></i>
+                        <strong>Quality Reports</strong>
+                        <span>Review company quality reports and summaries.</span>
+                        <small>Open module →</small>
+                    </a>
+
+                </div>
+
+                <div class="qf-qe-section-title">
+                    <h2>Recent Activity</h2>
+                    <span>Latest company records</span>
+                </div>
+
+                <div class="qf-qe-recent-grid">
+
+                    <div class="qf-qe-recent">
+                        <h3>Recent Datasets</h3>
+                        @forelse($recentDatasets as $dataset)
+                        <a href="{{ route('qe.datasets.show', $dataset->id) }}">
+                            <span>{{ $dataset->name }}</span>
+                            <small>{{ $dataset->created_at->format('d M Y') }}</small>
+                        </a>
+                        @empty
+                        <p>No datasets uploaded yet.</p>
+                        @endforelse
+                    </div>
+
+                    <div class="qf-qe-recent">
+                        <h3>Recent Defects</h3>
+                        @forelse($recentDefects as $defect)
+                        <a href="{{ route('qe.defects.show', $defect->id) }}">
+                            <span>{{ $defect->defect_type }}</span>
+                            <small>{{ ucfirst($defect->status) }}</small>
+                        </a>
+                        @empty
+                        <p>No defects recorded yet.</p>
+                        @endforelse
+                    </div>
+
+                    <div class="qf-qe-recent">
+                        <h3>Recent Inspections</h3>
+                        @forelse($recentInspections as $inspection)
+                        <a href="{{ route('qe.inspections.show', $inspection->id) }}">
+                            <span>{{ $inspection->inspection_number }}</span>
+                            <small>{{ ucfirst($inspection->status) }}</small>
+                        </a>
+                        @empty
+                        <p>No inspections recorded yet.</p>
+                        @endforelse
+                    </div>
+
+                </div>
+
+                @else
+                <div class="qf-qe-empty">
+                    No company is currently assigned to your account.
+                    Please contact your Company Administrator.
+                </div>
+                @endif
+
             </div>
+
+
+
+            <style>
+                .qf-qe-dashboard {
+                    color: #f8fafc;
+                    width: 100%;
+                }
+
+                .qf-qe-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    margin-bottom: 32px;
+                }
+
+                .qf-qe-eyebrow {
+                    color: #22d3ee;
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: 2px;
+                }
+
+                .qf-qe-header h1 {
+                    margin: 10px 0;
+                    font-size: 30px;
+                    font-weight: 750;
+                }
+
+                .qf-qe-header p,
+                .qf-qe-section-title span {
+                    color: #94a3b8;
+                    font-size: 13px;
+                }
+
+                .qf-qe-company {
+                    padding: 13px 17px;
+                    border: 1px solid #263b52;
+                    border-radius: 10px;
+                    background: #10243a;
+                    color: #67e8f9;
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    font-size: 13px;
+                }
+
+                .qf-qe-section-title {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin: 30px 0 15px;
+                }
+
+                .qf-qe-section-title h2 {
+                    font-size: 18px;
+                    font-weight: 750;
+                    margin: 0;
+                }
+
+                .qf-qe-stats {
+                    display: grid;
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                    gap: 15px;
+                }
+
+                .qf-qe-stat {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 9px;
+                    padding: 20px;
+                    text-decoration: none !important;
+                    border: 1px solid #263b52;
+                    border-radius: 13px;
+                    background: #111f32;
+                    transition: .2s;
+                }
+
+                .qf-qe-stat:hover,
+                .qf-qe-modules a:hover {
+                    border-color: #22d3ee;
+                    transform: translateY(-2px);
+                }
+
+                .qf-qe-stat i {
+                    color: #22d3ee;
+                    font-size: 22px;
+                }
+
+                .qf-qe-stat span {
+                    color: #94a3b8;
+                    font-size: 12px;
+                }
+
+                .qf-qe-stat strong {
+                    color: #f8fafc;
+                    font-size: 28px;
+                }
+
+                .qf-qe-stat small {
+                    color: #67e8f9;
+                    font-size: 11px;
+                }
+
+                .qf-qe-attention {
+                    display: grid;
+                    grid-template-columns: repeat(5, minmax(0, 1fr));
+                    gap: 12px;
+                }
+
+                .qf-qe-attention>div {
+                    padding: 16px;
+                    background: #111f32;
+                    border: 1px solid #263b52;
+                    border-radius: 11px;
+                }
+
+                .qf-qe-attention span {
+                    display: block;
+                    color: #94a3b8;
+                    font-size: 11px;
+                    min-height: 32px;
+                }
+
+                .qf-qe-attention strong {
+                    display: block;
+                    color: #fbbf24;
+                    font-size: 23px;
+                    margin-top: 8px;
+                }
+
+                .qf-qe-modules {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 15px;
+                }
+
+                .qf-qe-modules a {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 11px;
+                    padding: 21px;
+                    text-decoration: none !important;
+                    border: 1px solid #263b52;
+                    border-radius: 13px;
+                    background: linear-gradient(145deg, #16263b, #101c2d);
+                    transition: .2s;
+                }
+
+                .qf-qe-modules i {
+                    color: #22d3ee;
+                    font-size: 25px;
+                }
+
+                .qf-qe-modules strong {
+                    color: #f1f5f9;
+                    font-size: 14px;
+                }
+
+                .qf-qe-modules span {
+                    color: #94a3b8;
+                    font-size: 12px;
+                    line-height: 1.6;
+                }
+
+                .qf-qe-modules small {
+                    color: #22d3ee;
+                    font-size: 11px;
+                    font-weight: 700;
+                    margin-top: auto;
+                }
+
+                .qf-qe-recent-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 15px;
+                }
+
+                .qf-qe-recent {
+                    padding: 18px;
+                    background: #111f32;
+                    border: 1px solid #263b52;
+                    border-radius: 12px;
+                }
+
+                .qf-qe-recent h3 {
+                    font-size: 14px;
+                    margin: 0 0 14px;
+                }
+
+                .qf-qe-recent a {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 10px;
+                    padding: 11px 0;
+                    border-bottom: 1px solid #263b52;
+                    color: #e2e8f0;
+                    text-decoration: none;
+                    font-size: 11px;
+                }
+
+                .qf-qe-recent a:hover {
+                    color: #22d3ee;
+                }
+
+                .qf-qe-recent small {
+                    color: #94a3b8;
+                    white-space: nowrap;
+                }
+
+                .qf-qe-recent p,
+                .qf-qe-empty {
+                    color: #94a3b8;
+                    font-size: 12px;
+                }
+
+                .qf-qe-empty {
+                    padding: 25px;
+                    border: 1px solid #263b52;
+                    border-radius: 12px;
+                    background: #111f32;
+                }
+
+                @media(max-width: 1000px) {
+                    .qf-qe-stats {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+
+                    .qf-qe-attention {
+                        grid-template-columns: repeat(3, 1fr);
+                    }
+
+                    .qf-qe-modules {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+
+                    .qf-qe-recent-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media(max-width: 550px) {
+
+                    .qf-qe-stats,
+                    .qf-qe-attention,
+                    .qf-qe-modules {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .qf-qe-header h1 {
+                        font-size: 24px;
+                    }
+                }
+            </style>
+
+
 
             @else
 

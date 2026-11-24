@@ -79,6 +79,10 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             ->whereNumber('id')
             ->name('predictions.show');
 
+        Route::get('/predictions/{id}/pdf', [PredictionController::class, 'download'])
+            ->whereNumber('id')
+            ->name('predictions.pdf');
+
         // Defect Management
         Route::get('/defects', [DefectController::class, 'index'])
             ->name('defects.index');

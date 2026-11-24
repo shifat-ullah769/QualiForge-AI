@@ -197,22 +197,22 @@
                 </div>
 
                 <a href="{{ route('qe.datasets.index') }}"
-                   class="qf-predictions-back">
+                    class="qf-predictions-back">
                     ← Back to Datasets
                 </a>
             </div>
 
             @if (session('success'))
-                <div class="qf-predictions-alert">
-                    {{ session('success') }}
-                </div>
+            <div class="qf-predictions-alert">
+                {{ session('success') }}
+            </div>
             @endif
 
             @if (session('error'))
-                <div class="qf-predictions-alert"
-                     style="background:rgba(220,38,38,.10);border-color:rgba(220,38,38,.25);color:#fca5a5;">
-                    {{ session('error') }}
-                </div>
+            <div class="qf-predictions-alert"
+                style="background:rgba(220,38,38,.10);border-color:rgba(220,38,38,.25);color:#fca5a5;">
+                {{ session('error') }}
+            </div>
             @endif
 
             <div class="qf-predictions-card">
@@ -227,69 +227,79 @@
 
                 @if ($predictions->count() > 0)
 
-                    <div class="qf-predictions-table-wrap">
-                        <table class="qf-predictions-table">
-                            <thead>
-                                <tr>
-                                    <th>Prediction ID</th>
-                                    <th>Dataset</th>
-                                    <th>Requested By</th>
-                                    <th>Model Version</th>
-                                    <th>Status</th>
-                                    <th>Created At</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
+                <div class="qf-predictions-table-wrap">
+                    <table class="qf-predictions-table">
+                        <thead>
+                            <tr>
+                                <th>Prediction ID</th>
+                                <th>Dataset</th>
+                                <th>Requested By</th>
+                                <th>Model Version</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                @foreach ($predictions as $prediction)
-                                    <tr>
-                                        <td>#{{ $prediction->id }}</td>
+                        <tbody>
+                            @foreach ($predictions as $prediction)
+                            <tr>
+                                <td>#{{ $prediction->id }}</td>
 
-                                        <td class="qf-predictions-name">
-                                            {{ $prediction->dataset?->name ?? 'Dataset unavailable' }}
-                                        </td>
+                                <td class="qf-predictions-name">
+                                    {{ $prediction->dataset?->name ?? 'Dataset unavailable' }}
+                                </td>
 
-                                        <td>
-                                            {{ $prediction->requester?->name ?? 'Unknown' }}
-                                        </td>
+                                <td>
+                                    {{ $prediction->requester?->name ?? 'Unknown' }}
+                                </td>
 
-                                        <td>
-                                            {{ $prediction->model_version ?? '—' }}
-                                        </td>
+                                <td>
+                                    {{ $prediction->model_version ?? '—' }}
+                                </td>
 
-                                        <td>
-                                            <span class="qf-prediction-status {{ strtolower($prediction->status) }}">
-                                                {{ str_replace('_', ' ', $prediction->status) }}
-                                            </span>
-                                        </td>
+                                <td>
+                                    <span class="qf-prediction-status {{ strtolower($prediction->status) }}">
+                                        {{ str_replace('_', ' ', $prediction->status) }}
+                                    </span>
+                                </td>
 
-                                        <td>
-                                            {{ $prediction->created_at?->format('d M Y, h:i A') ?? '—' }}
-                                        </td>
+                                <td>
+                                    {{ $prediction->created_at?->format('d M Y, h:i A') ?? '—' }}
+                                </td>
 
-                                        <td>
-                                            <a href="{{ route('qe.predictions.show', $prediction->id) }}"
-                                               class="qf-prediction-view">
-                                                View Details →
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <div class="qf-predictions-pagination">
-                        {{ $predictions->links() }}
-                    </div>
+                                <td>
+                                    <a href="{{ route('qe.predictions.show', $prediction->id) }}"
+                                        class="qf-prediction-view">
+                                        View Details →
+                                    </a>
+
+                                    @if($prediction->status === 'completed')
+                                    <a href="{{ route('qe.predictions.pdf', $prediction->id) }}"
+                                        class="qf-prediction-view"
+                                        style="margin-left: 10px;">
+                                        Download PDF ↓
+                                    </a>
+                                    @endif
+                                </td>
+
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="qf-predictions-pagination">
+                    {{ $predictions->links() }}
+                </div>
 
                 @else
 
-                    <div class="qf-predictions-empty">
-                        <strong>No Predictions Yet</strong>
-                        Prediction records will appear here after you run a prediction on a validated dataset.
-                    </div>
+                <div class="qf-predictions-empty">
+                    <strong>No Predictions Yet</strong>
+                    Prediction records will appear here after you run a prediction on a validated dataset.
+                </div>
 
                 @endif
             </div>

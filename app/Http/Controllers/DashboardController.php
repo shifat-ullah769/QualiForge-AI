@@ -126,16 +126,86 @@ class DashboardController extends Controller
 |
 */
 
+
         if ($user->hasRole(\App\UserRole::QUALITY_ENGINEER)) {
 
             $company = $user->company;
+            $dashboardRole = 'quality_engineer';
 
-            return view('dashboard', [
-                'dashboardRole' => 'quality_engineer',
-                'qualityEngineer' => $user,
-                'company' => $company,
-            ]);
+            if (!$company) {
+                return view('dashboard', [
+                    'dashboardRole' => 'quality_engineer',
+                    'qualityEngineer' => $user,
+                    'company' => null,
+                ]);
+            }
+
+            $companyId = $company->id;
+
+            // Dataset overview
+            $totalDatasets = \App\Models\Dataset::where('company_id', $companyId)->count();
+            $validatedDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->where('validation_status', 'passed')->count();
+            $pendingDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->where('validation_status', 'pending')->count();
+            $failedDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->where('validation_status', 'failed')->count();
+
+            // Prediction overview
+            $totalPredictions = \App\Models\Prediction::where('company_id', $companyId)->count();
+            $completedPredictions = \App\Models\Prediction::where('company_id', $companyId)
+                ->where('status', 'completed')->count();
+
+            // Defect overview
+            $totalDefects = \App\Models\Defect::where('company_id', $companyId)->count();
+            $openDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->whereIn('status', ['open', 'investigating'])->count();
+            $highPriorityDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->whereIn('severity', ['high', 'critical'])
+                ->whereIn('status', ['open', 'investigating'])->count();
+
+            // Inspection overview
+            $totalInspections = \App\Models\Inspection::where('company_id', $companyId)->count();
+            $scheduledInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->where('status', 'scheduled')->count();
+            $completedInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->where('status', 'completed')->count();
+            $failedInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->where('result', 'fail')->count();
+
+            // Recent activity
+            $recentDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $recentDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $recentInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            return view('dashboard', compact(
+                'dashboardRole',
+                'user',
+                'company',
+                'totalDatasets',
+                'validatedDatasets',
+                'pendingDatasets',
+                'failedDatasets',
+                'totalPredictions',
+                'completedPredictions',
+                'totalDefects',
+                'openDefects',
+                'highPriorityDefects',
+                'totalInspections',
+                'scheduledInspections',
+                'completedInspections',
+                'failedInspections',
+                'recentDatasets',
+                'recentDefects',
+                'recentInspections'
+            ));
         }
+
 
         /*
         |--------------------------------------------------------------------------

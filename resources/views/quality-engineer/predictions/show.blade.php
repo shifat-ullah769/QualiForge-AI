@@ -42,6 +42,70 @@
                 font-weight: 650;
             }
 
+            .qf-pd-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .qf-pd-button {
+                display: inline-block;
+                padding: 10px 15px;
+                border-radius: 7px;
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                border: 1px solid #164e63;
+                background: #0e7490;
+                color: #ffffff;
+            }
+
+            .qf-pd-button:hover {
+                background: #0891b2;
+            }
+
+            .qf-pd-print {
+                background: #1e334a;
+                border-color: #334155;
+            }
+
+            .qf-pd-print:hover {
+                background: #334155;
+            }
+
+            @media print {
+
+                nav,
+                header,
+                .qf-pd-actions {
+                    display: none !important;
+                }
+
+                .qf-prediction-details {
+                    background: #ffffff !important;
+                    color: #111827 !important;
+                    padding: 10px !important;
+                }
+
+                .qf-pd-card,
+                .qf-pd-chart-box,
+                .qf-pd-metric {
+                    background: #ffffff !important;
+                    color: #111827 !important;
+                    border-color: #cccccc !important;
+                    break-inside: avoid;
+                }
+
+                .qf-pd-header h1,
+                .qf-pd-card h2,
+                .qf-pd-metric strong,
+                .qf-pd-meta strong {
+                    color: #111827 !important;
+                }
+            }
+
             .qf-pd-demo {
                 padding: 13px 16px;
                 margin-bottom: 22px;
@@ -307,10 +371,25 @@
                     <p>Manufacturing quality prediction and analysis</p>
                 </div>
 
-                <a href="{{ route('qe.predictions.index') }}"
-                    class="qf-pd-back">
-                    ← Prediction History
-                </a>
+                <div class="qf-pd-actions">
+
+                    <a href="{{ route('qe.predictions.pdf', $prediction->id) }}"
+                        class="qf-pd-button">
+                        Download Report ↓
+                    </a>
+
+                    <button type="button"
+                        onclick="window.print()"
+                        class="qf-pd-button qf-pd-print">
+                        Print Report
+                    </button>
+
+                    <a href="{{ route('qe.predictions.index') }}"
+                        class="qf-pd-back">
+                        ← Prediction History
+                    </a>
+
+                </div>
             </div>
 
             @if ($isDemo)

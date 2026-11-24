@@ -8,6 +8,8 @@ use App\Models\Prediction;
 use App\Services\DemoPredictionEngine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class PredictionController extends Controller
 {
@@ -94,5 +96,28 @@ class PredictionController extends Controller
             ->findOrFail($id);
 
         return view('quality-engineer.predictions.show', compact('prediction'));
+    }
+
+    public function download(Request $request, int $id)
+    {
+        $companyId = $request->user()->company_id;
+
+        abort_unless($companyId, 403);
+
+        $prediction = Prediction::where('company_id', $companyId)
+            ->with(['dataset', 'requester'])
+            ->findOrFail($id);
+
+        $summary = $prediction->summary ?? [];
+        $payload = $prediction->result_payload ?? [];
+
+        $pdf = Pdf::loadView(
+            'quality-engineer.predictions.pdf',
+            compact('prediction', 'summary', 'payload')
+        )->setPaper('a4', 'portrait');
+
+        return $pdf->download(
+            'prediction-report-' . $prediction->id . '.pdf'
+        );
     }
 }
