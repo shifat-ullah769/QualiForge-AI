@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyAdmin\ManufacturingSetupController;
 use App\Http\Controllers\CompanyAdmin\UserAssignmentController;
 use App\Http\Controllers\QualityEngineer\PredictionController;
 use App\Http\Controllers\QualityEngineer\DefectController;
+use App\Http\Controllers\QualityEngineer\InspectionController;
 
 
 
@@ -91,6 +92,24 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         Route::put('/defects/{id}', [DefectController::class, 'update'])
             ->whereNumber('id')
             ->name('defects.update');
+
+        // Inspection Management
+        Route::get('/inspections', [InspectionController::class, 'index'])
+            ->name('inspections.index');
+
+        Route::get('/inspections/create', [InspectionController::class, 'create'])
+            ->name('inspections.create');
+
+        Route::post('/inspections', [InspectionController::class, 'store'])
+            ->name('inspections.store');
+
+        Route::get('/inspections/{id}', [InspectionController::class, 'show'])
+            ->whereNumber('id')
+            ->name('inspections.show');
+
+        Route::put('/inspections/{id}', [InspectionController::class, 'update'])
+            ->whereNumber('id')
+            ->name('inspections.update');
     });
 
     /*

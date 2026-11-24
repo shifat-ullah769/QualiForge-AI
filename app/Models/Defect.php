@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Defect extends Model
 {
@@ -23,6 +24,7 @@ class Defect extends Model
         'reported_by',
         'detected_at',
         'resolved_at',
+        'inspection_id',
     ];
 
     protected function casts(): array
@@ -57,5 +59,10 @@ class Defect extends Model
     public function reporter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reported_by');
+    }
+
+    public function inspection(): BelongsTo
+    {
+        return $this->belongsTo(Inspection::class);
     }
 }

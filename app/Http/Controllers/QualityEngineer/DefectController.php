@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use App\Models\Inspection;
+
+
 
 class DefectController extends Controller
 {
@@ -76,12 +79,19 @@ class DefectController extends Controller
     /**
      * Show the defect creation form.
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = $this->authenticatedUser();
         $companyId = $user->company_id;
 
         abort_unless($companyId, 403);
+
+        $inspection = null;
+
+        if ($request->filled('inspection_id')) {
+            $inspection = Inspection::where('company_id', $companyId)
+                ->findOrFail($request->input('inspection_id'));
+        }
 
         $factories = Factory::where('company_id', $companyId)
             ->where('status', 'active')
@@ -104,13 +114,14 @@ class DefectController extends Controller
 
         return view(
             'quality-engineer.defects.create',
-            compact('factories', 'productionLines', 'machines')
+            compact('factories', 'productionLines', 'machines', 'inspection')
         );
     }
 
     /**
      * Store a new defect record.
      */
+
     public function store(Request $request)
     {
         $user = $this->authenticatedUser();
@@ -119,6 +130,13 @@ class DefectController extends Controller
         abort_unless($companyId, 403);
 
         $validated = $request->validate([
+            'inspection_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('inspections', 'id')
+                    ->where('company_id', $companyId),
+            ],
+
             'factory_id' => [
                 'nullable',
                 'integer',
@@ -158,6 +176,29 @@ class DefectController extends Controller
             $companyId
         );
 
+        // Verify that linked inspection belongs to the same
+        // factory, production line and machine.
+        if (!empty($validated['inspection_id'])) {
+
+            $inspection = Inspection::where('company_id', $companyId)
+                ->findOrFail($validated['inspection_id']);
+
+            foreach (
+                [
+                    'factory_id',
+                    'production_line_id',
+                    'machine_id',
+                ] as $field
+            ) {
+
+                if (($validated[$field] ?? null) != $inspection->$field) {
+                    throw ValidationException::withMessages([
+                        $field => 'The selected production information does not match the linked inspection.',
+                    ]);
+                }
+            }
+        }
+
         $defect = Defect::create([
             ...$validated,
 
@@ -171,6 +212,7 @@ class DefectController extends Controller
             ->route('qe.defects.show', $defect->id)
             ->with('success', 'Defect record created successfully.');
     }
+
 
     /**
      * Display a single company defect.
@@ -188,6 +230,7 @@ class DefectController extends Controller
                 'productionLine',
                 'machine',
                 'reporter',
+                'inspection',
             ])
             ->findOrFail($id);
 
