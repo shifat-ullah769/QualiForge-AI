@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Dataset extends Model
 {
@@ -62,5 +63,10 @@ class Dataset extends Model
     public function machine(): BelongsTo
     {
         return $this->belongsTo(Machine::class);
+    }
+
+    public function predictions(): HasMany
+    {
+        return $this->hasMany(Prediction::class);
     }
 }

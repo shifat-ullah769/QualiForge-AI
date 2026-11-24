@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -78,5 +79,10 @@ class User extends Authenticatable
     public function assignedByOthers(): HasMany
     {
         return $this->hasMany(UserAssignment::class, 'assigned_by');
+    }
+
+    public function requestedPredictions(): HasMany
+    {
+        return $this->hasMany(Prediction::class, 'requested_by');
     }
 }

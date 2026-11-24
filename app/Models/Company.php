@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+
 class Company extends Model
 {
     protected $fillable = [
@@ -53,5 +54,10 @@ class Company extends Model
     public function assignments(): HasMany
     {
         return $this->hasMany(UserAssignment::class);
+    }
+
+    public function predictions(): HasMany
+    {
+        return $this->hasMany(Prediction::class);
     }
 }

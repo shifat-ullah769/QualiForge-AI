@@ -295,6 +295,8 @@
                         <label>Last Validated</label>
                         <p>{{ $dataset->validated_at?->format('d M Y, h:i A') ?? 'Not validated yet' }}</p>
                     </div>
+
+
                     @if ($dataset->validation_status !== 'passed')
                     <form
                         action="{{ route('qe.datasets.validate', $dataset->id) }}"
@@ -315,6 +317,19 @@
                     </div>
                     @endif
                 </div>
+                @if ($dataset->validation_status === 'passed')
+                <form
+                    action="{{ route('qe.predictions.store', $dataset->id) }}"
+                    method="POST"
+                    class="qf-validate-form"
+                    onsubmit="return confirm('Are you sure you want to run prediction on this dataset?')">
+                    @csrf
+
+                    <button type="submit" class="qf-validate-button">
+                        Run Prediction
+                    </button>
+                </form>
+                @endif
             </div>
 
             @if (!empty($dataset->validation_errors))

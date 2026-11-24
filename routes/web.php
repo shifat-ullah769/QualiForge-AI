@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\QualityEngineer\DatasetController;
 use App\Http\Controllers\CompanyAdmin\ManufacturingSetupController;
 use App\Http\Controllers\CompanyAdmin\UserAssignmentController;
+use App\Http\Controllers\QualityEngineer\PredictionController;
 
 
 Route::get('/', function () {
@@ -58,6 +59,18 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         Route::post('/datasets/{id}/validate', [DatasetController::class, 'validate'])
             ->whereNumber('id')
             ->name('datasets.validate');
+
+        // Prediction Management
+        Route::get('/predictions', [PredictionController::class, 'index'])
+            ->name('predictions.index');
+
+        Route::post('/datasets/{datasetId}/predict', [PredictionController::class, 'store'])
+            ->whereNumber('datasetId')
+            ->name('predictions.store');
+
+        Route::get('/predictions/{id}', [PredictionController::class, 'show'])
+            ->whereNumber('id')
+            ->name('predictions.show');
     });
 
     /*
