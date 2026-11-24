@@ -13,6 +13,7 @@ use App\Http\Controllers\QualityEngineer\DefectController;
 use App\Http\Controllers\QualityEngineer\InspectionController;
 use App\Http\Controllers\QualityEngineer\AlertController;
 use App\Http\Controllers\QualityEngineer\RootCauseAnalysisController;
+use App\Http\Controllers\QualityEngineer\QualityReportController;
 
 
 
@@ -104,6 +105,14 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         // Root Cause Analysis
         Route::get('/root-cause-analysis', [RootCauseAnalysisController::class, 'index'])
             ->name('root-cause-analysis.index');
+
+        // Quality Reports
+        Route::get('/reports', [QualityReportController::class, 'index'])
+            ->name('reports.index');
+
+        Route::get('/reports/pdf', [QualityReportController::class, 'download'])
+            ->name('reports.pdf');
+
 
         // Inspection Management
         Route::get('/inspections', [InspectionController::class, 'index'])
