@@ -85,4 +85,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Prediction::class, 'requested_by');
     }
+
+    public function reportedDefects(): HasMany
+    {
+        return $this->hasMany(Defect::class, 'reported_by');
+    }
 }

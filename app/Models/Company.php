@@ -60,4 +60,9 @@ class Company extends Model
     {
         return $this->hasMany(Prediction::class);
     }
+
+    public function defects(): HasMany
+    {
+        return $this->hasMany(Defect::class);
+    }
 }

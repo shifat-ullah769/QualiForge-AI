@@ -9,6 +9,8 @@ use App\Http\Controllers\QualityEngineer\DatasetController;
 use App\Http\Controllers\CompanyAdmin\ManufacturingSetupController;
 use App\Http\Controllers\CompanyAdmin\UserAssignmentController;
 use App\Http\Controllers\QualityEngineer\PredictionController;
+use App\Http\Controllers\QualityEngineer\DefectController;
+
 
 
 Route::get('/', function () {
@@ -71,6 +73,24 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         Route::get('/predictions/{id}', [PredictionController::class, 'show'])
             ->whereNumber('id')
             ->name('predictions.show');
+
+        // Defect Management
+        Route::get('/defects', [DefectController::class, 'index'])
+            ->name('defects.index');
+
+        Route::get('/defects/create', [DefectController::class, 'create'])
+            ->name('defects.create');
+
+        Route::post('/defects', [DefectController::class, 'store'])
+            ->name('defects.store');
+
+        Route::get('/defects/{id}', [DefectController::class, 'show'])
+            ->whereNumber('id')
+            ->name('defects.show');
+
+        Route::put('/defects/{id}', [DefectController::class, 'update'])
+            ->whereNumber('id')
+            ->name('defects.update');
     });
 
     /*
