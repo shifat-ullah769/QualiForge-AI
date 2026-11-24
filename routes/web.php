@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyAdmin\UserAssignmentController;
 use App\Http\Controllers\QualityEngineer\PredictionController;
 use App\Http\Controllers\QualityEngineer\DefectController;
 use App\Http\Controllers\QualityEngineer\InspectionController;
+use App\Http\Controllers\QualityEngineer\AlertController;
+
 
 
 
@@ -93,6 +95,10 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             ->whereNumber('id')
             ->name('defects.update');
 
+
+        // Quality Alerts
+        Route::get('/alerts', [AlertController::class, 'index'])
+            ->name('alerts.index');
         // Inspection Management
         Route::get('/inspections', [InspectionController::class, 'index'])
             ->name('inspections.index');
