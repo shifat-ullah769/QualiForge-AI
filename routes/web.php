@@ -14,6 +14,7 @@ use App\Http\Controllers\QualityEngineer\InspectionController;
 use App\Http\Controllers\QualityEngineer\AlertController;
 use App\Http\Controllers\QualityEngineer\RootCauseAnalysisController;
 use App\Http\Controllers\QualityEngineer\QualityReportController;
+use App\Http\Controllers\QualityManager\DatasetOverviewController;
 
 
 
@@ -136,6 +137,27 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             ->whereNumber('id')
             ->name('inspections.update');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Quality Manager 
+    |--------------------------------------------------------------------------
+    */
+
+    Route::middleware('role:quality_manager')
+        ->prefix('qm')
+        ->name('qm.')
+        ->group(function () {
+
+            // Dataset Overview
+            Route::get('/datasets', [DatasetOverviewController::class, 'index'])
+                ->name('datasets.index');
+
+            Route::get('/datasets/{id}', [DatasetOverviewController::class, 'show'])
+                ->whereNumber('id')
+                ->name('datasets.show');
+        });
+
 
     /*
     |--------------------------------------------------------------------------
