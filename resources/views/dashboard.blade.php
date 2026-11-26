@@ -1893,6 +1893,7 @@
 
 
 
+
             @elseif (auth()->user()->hasRole(\App\UserRole::QUALITY_MANAGER))
 
             {{-- QUALITY MANAGER DASHBOARD --}}
@@ -1910,52 +1911,148 @@
                     </h1>
 
                     <p class="qf-qm-subtitle">
-                        Monitor company-wide quality performance, predictions,
-                        defects and inspection activities.
+                        Your company-wide overview of manufacturing quality,
+                        operational performance and inspection activities.
                     </p>
                 </div>
 
                 @if($company)
 
                 <div class="qf-qm-company">
-                    <strong>Company:</strong> {{ $company->name }}
-                    <span style="float:right;">Read-only Monitoring</span>
+                    <strong><i class="bi bi-building"></i> Company:</strong>
+                    {{ $company->name }}
+
+                    <span style="float:right;">
+                        <i class="bi bi-eye"></i> Read-only Monitoring
+                    </span>
                 </div>
+
+                {{-- KPI OVERVIEW --}}
 
                 <div class="qf-qm-grid">
 
-                    <div class="qf-qm-card">
+                    <a href="{{ route('qm.datasets.index') }}"
+                        class="qf-qm-card"
+                        style="display:block;text-decoration:none;color:inherit;">
+
                         <h3><i class="bi bi-database"></i> Dataset Overview</h3>
                         <p>Total Datasets: <strong>{{ $totalDatasets }}</strong></p>
                         <p>Validated: <strong>{{ $validatedDatasets }}</strong></p>
                         <p>Pending Validation: <strong>{{ $pendingDatasets }}</strong></p>
-                    </div>
+                        <span class="qf-qm-status">View Datasets →</span>
+                    </a>
 
-                    <div class="qf-qm-card">
+                    <a href="{{ route('qm.predictions.index') }}"
+                        class="qf-qm-card"
+                        style="display:block;text-decoration:none;color:inherit;">
+
                         <h3><i class="bi bi-graph-up-arrow"></i> Prediction Monitoring</h3>
                         <p>Total Predictions: <strong>{{ $totalPredictions }}</strong></p>
                         <p>Completed: <strong>{{ $completedPredictions }}</strong></p>
                         <p>Failed: <strong>{{ $failedPredictions }}</strong></p>
-                    </div>
+                        <span class="qf-qm-status">View Predictions →</span>
+                    </a>
 
-                    <div class="qf-qm-card">
+                    <a href="{{ route('qm.defects.index') }}"
+                        class="qf-qm-card"
+                        style="display:block;text-decoration:none;color:inherit;">
+
                         <h3><i class="bi bi-exclamation-triangle"></i> Defect Oversight</h3>
                         <p>Total Defects: <strong>{{ $totalDefects }}</strong></p>
                         <p>Open / Investigating: <strong>{{ $openDefects }}</strong></p>
                         <p>High / Critical Open: <strong>{{ $criticalDefects }}</strong></p>
-                    </div>
+                        <span class="qf-qm-status">Review Defects →</span>
+                    </a>
 
-                    <div class="qf-qm-card">
+                    <a href="{{ route('qm.inspections.index') }}"
+                        class="qf-qm-card"
+                        style="display:block;text-decoration:none;color:inherit;">
+
                         <h3><i class="bi bi-clipboard-check"></i> Inspection Monitoring</h3>
                         <p>Total Inspections: <strong>{{ $totalInspections }}</strong></p>
                         <p>Completed: <strong>{{ $completedInspections }}</strong></p>
                         <p>Failed: <strong>{{ $failedInspections }}</strong></p>
-                    </div>
+                        <span class="qf-qm-status">View Inspections →</span>
+                    </a>
 
                 </div>
 
-                <div style="margin-top:28px;">
-                    <h2 style="font-size:18px;font-weight:750;margin-bottom:15px;">
+                {{-- QUALITY MANAGEMENT MODULES --}}
+
+                <div style="margin-top:32px;">
+
+                    <h2 style="font-size:19px;font-weight:750;margin-bottom:7px;color:#f8fafc;">
+                        Quality Management Workspace
+                    </h2>
+
+                    <p style="font-size:12px;color:#94a3b8;margin-bottom:17px;">
+                        Access monitoring, analytical and reporting modules.
+                    </p>
+
+                    <div class="qf-qm-grid">
+
+                        <a href="{{ route('qm.datasets.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-database-check"></i> Dataset Overview</h3>
+                            <p>Review company datasets, validation status and uploaded records.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                        <a href="{{ route('qm.predictions.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-activity"></i> Prediction Monitoring</h3>
+                            <p>Monitor prediction executions, results and demo disclosures.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                        <a href="{{ route('qm.defects.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-exclamation-diamond"></i> Defect Oversight</h3>
+                            <p>Review reported defects, severity levels and resolution status.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                        <a href="{{ route('qm.inspections.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-clipboard-data"></i> Inspection Monitoring</h3>
+                            <p>Review inspection schedules, outcomes and linked defects.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                        <a href="{{ route('qm.analytics.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-bar-chart-line"></i> Quality Analytics</h3>
+                            <p>Explore defect patterns, inspection results and prediction insights.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                        <a href="{{ route('qm.reports.index') }}"
+                            class="qf-qm-card"
+                            style="display:block;text-decoration:none;color:inherit;">
+
+                            <h3><i class="bi bi-file-earmark-bar-graph"></i> Quality Reports</h3>
+                            <p>Review company quality reports and access PDF and print options.</p>
+                            <span class="qf-qm-status">Open Module →</span>
+                        </a>
+
+                    </div>
+                </div>
+
+                {{-- RECENT QUALITY ACTIVITY --}}
+
+                <div style="margin-top:32px;">
+
+                    <h2 style="font-size:19px;font-weight:750;margin-bottom:17px;color:#f8fafc;">
                         Recent Quality Activity
                     </h2>
 
@@ -1963,8 +2060,14 @@
 
                         <div class="qf-qm-card">
                             <h3><i class="bi bi-database"></i> Recent Datasets</h3>
+
                             @forelse($recentDatasets as $dataset)
-                            <p>{{ $dataset->name }}</p>
+                            <p style="margin-bottom:9px;">
+                                <a href="{{ route('qm.datasets.show', $dataset->id) }}"
+                                    style="color:#67e8f9;text-decoration:none;">
+                                    {{ $dataset->name }} →
+                                </a>
+                            </p>
                             @empty
                             <p>No datasets available.</p>
                             @endforelse
@@ -1972,8 +2075,15 @@
 
                         <div class="qf-qm-card">
                             <h3><i class="bi bi-graph-up"></i> Recent Predictions</h3>
+
                             @forelse($recentPredictions as $prediction)
-                            <p>Prediction #{{ $prediction->id }} — {{ ucfirst($prediction->status) }}</p>
+                            <p style="margin-bottom:9px;">
+                                <a href="{{ route('qm.predictions.show', $prediction->id) }}"
+                                    style="color:#67e8f9;text-decoration:none;">
+                                    Prediction #{{ $prediction->id }}
+                                    &mdash; {{ ucfirst($prediction->status) }} →
+                                </a>
+                            </p>
                             @empty
                             <p>No predictions available.</p>
                             @endforelse
@@ -1981,8 +2091,15 @@
 
                         <div class="qf-qm-card">
                             <h3><i class="bi bi-exclamation-triangle"></i> Recent Defects</h3>
+
                             @forelse($recentDefects as $defect)
-                            <p>{{ $defect->defect_type }} — {{ ucfirst($defect->severity) }}</p>
+                            <p style="margin-bottom:9px;">
+                                <a href="{{ route('qm.defects.show', $defect->id) }}"
+                                    style="color:#67e8f9;text-decoration:none;">
+                                    {{ $defect->defect_type }}
+                                    &mdash; {{ ucfirst($defect->severity) }} →
+                                </a>
+                            </p>
                             @empty
                             <p>No defects available.</p>
                             @endforelse
@@ -1990,8 +2107,15 @@
 
                         <div class="qf-qm-card">
                             <h3><i class="bi bi-clipboard-check"></i> Recent Inspections</h3>
+
                             @forelse($recentInspections as $inspection)
-                            <p>{{ $inspection->inspection_number }} — {{ ucfirst($inspection->status) }}</p>
+                            <p style="margin-bottom:9px;">
+                                <a href="{{ route('qm.inspections.show', $inspection->id) }}"
+                                    style="color:#67e8f9;text-decoration:none;">
+                                    {{ $inspection->inspection_number }}
+                                    &mdash; {{ ucfirst($inspection->status) }} →
+                                </a>
+                            </p>
                             @empty
                             <p>No inspections available.</p>
                             @endforelse
@@ -2003,12 +2127,175 @@
                 @else
 
                 <div class="qf-qm-card">
-                    <p>No company is assigned to your account. Please contact your Company Administrator.</p>
+                    <p>
+                        No company is assigned to your account.
+                        Please contact your Company Administrator.
+                    </p>
                 </div>
 
                 @endif
 
             </div>
+
+
+
+            <style>
+                /* QUALITY MANAGER DASHBOARD */
+
+                .qf-qm-dashboard {
+                    width: 100%;
+                    color: #f8fafc;
+                }
+
+                .qf-qm-header {
+                    margin-bottom: 28px;
+                    padding: 28px 30px;
+                    border: 1px solid #243247;
+                    border-radius: 16px;
+                    background: linear-gradient(120deg, #13283e, #0d1726);
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+                }
+
+                .qf-qm-eyebrow {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 12px;
+                    color: #22d3ee;
+                    font-size: 11px;
+                    font-weight: 700;
+                    letter-spacing: .13em;
+                }
+
+                .qf-qm-title {
+                    margin: 0 0 10px;
+                    color: #f8fafc;
+                    font-size: 29px;
+                    font-weight: 750;
+                    line-height: 1.3;
+                }
+
+                .qf-qm-subtitle {
+                    margin: 0;
+                    color: #94a3b8;
+                    font-size: 13px;
+                    line-height: 1.7;
+                }
+
+                .qf-qm-company {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                    margin-bottom: 24px;
+                    padding: 16px 20px;
+                    border: 1px solid #243247;
+                    border-radius: 12px;
+                    background: #0e2034;
+                    color: #cbd5e1;
+                    font-size: 13px;
+                }
+
+                .qf-qm-company strong {
+                    color: #22d3ee;
+                }
+
+                .qf-qm-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 20px;
+                }
+
+                .qf-qm-card {
+                    display: block;
+                    min-width: 0;
+                    padding: 23px;
+                    border: 1px solid #243247;
+                    border-radius: 15px;
+                    background: linear-gradient(145deg, #162031, #0d1726);
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, .16);
+                    transition: transform .2s ease, border-color .2s ease,
+                        box-shadow .2s ease;
+                }
+
+                .qf-qm-card:hover {
+                    border-color: rgba(34, 211, 238, .5);
+                    transform: translateY(-3px);
+                    box-shadow: 0 12px 28px rgba(0, 0, 0, .24);
+                }
+
+                .qf-qm-card h3 {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin: 0 0 16px;
+                    color: #e2e8f0;
+                    font-size: 15px;
+                    font-weight: 700;
+                }
+
+                .qf-qm-card h3 i {
+                    color: #22d3ee;
+                    font-size: 19px;
+                }
+
+                .qf-qm-card p {
+                    margin: 0 0 8px;
+                    color: #94a3b8;
+                    font-size: 12px;
+                    line-height: 1.8;
+                }
+
+                .qf-qm-card p strong {
+                    color: #f8fafc;
+                    font-weight: 700;
+                }
+
+                .qf-qm-status {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-top: 15px;
+                    padding: 7px 11px;
+                    border: 1px solid rgba(34, 211, 238, .2);
+                    border-radius: 7px;
+                    background: rgba(8, 145, 178, .1);
+                    color: #67e8f9;
+                    font-size: 11px;
+                    font-weight: 700;
+                }
+
+                .qf-qm-card a {
+                    color: #67e8f9;
+                    text-decoration: none;
+                    overflow-wrap: anywhere;
+                }
+
+                .qf-qm-card a:hover {
+                    color: #a5f3fc;
+                    text-decoration: underline;
+                }
+
+                @media (max-width: 850px) {
+                    .qf-qm-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .qf-qm-header {
+                        padding: 21px;
+                    }
+
+                    .qf-qm-title {
+                        font-size: 24px;
+                    }
+
+                    .qf-qm-card {
+                        padding: 18px;
+                    }
+                }
+            </style>
 
 
             @else

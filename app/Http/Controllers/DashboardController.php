@@ -121,8 +121,6 @@ class DashboardController extends Controller
 | QUALITY ENGINEER DASHBOARD
 |--------------------------------------------------------------------------
 |
-| Quality Engineers work within their assigned company.
-| They focus on inspection, defect analysis and quality monitoring.
 |
 */
 
@@ -141,7 +139,7 @@ class DashboardController extends Controller
             }
 
             $companyId = $company->id;
-            $dashboardRole = 'quality_manager';
+            $dashboardRole = 'quality_engineer';
 
             // Dataset overview
             $totalDatasets = \App\Models\Dataset::where('company_id', $companyId)->count();
@@ -281,7 +279,7 @@ class DashboardController extends Controller
                 ->latest()->take(5)->get();
 
             $dashboardRole = 'quality_manager';
-            
+
             return view('dashboard', compact(
                 'user',
                 'company',
