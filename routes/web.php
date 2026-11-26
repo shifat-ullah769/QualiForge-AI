@@ -18,6 +18,7 @@ use App\Http\Controllers\QualityManager\DatasetOverviewController;
 use App\Http\Controllers\QualityManager\PredictionMonitoringController;
 use App\Http\Controllers\QualityManager\DefectOversightController;
 use App\Http\Controllers\QualityManager\InspectionMonitoringController;
+use App\Http\Controllers\QualityManager\QualityAnalyticsController;
 
 
 
@@ -184,6 +185,9 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             Route::get('/inspections/{id}', [InspectionMonitoringController::class, 'show'])
                 ->whereNumber('id')
                 ->name('inspections.show');
+
+            Route::get('/analytics', [QualityAnalyticsController::class, 'index'])
+                ->name('analytics.index');
         });
 
 
