@@ -141,6 +141,7 @@ class DashboardController extends Controller
             }
 
             $companyId = $company->id;
+            $dashboardRole = 'quality_manager';
 
             // Dataset overview
             $totalDatasets = \App\Models\Dataset::where('company_id', $companyId)->count();
@@ -201,6 +202,104 @@ class DashboardController extends Controller
                 'completedInspections',
                 'failedInspections',
                 'recentDatasets',
+                'recentDefects',
+                'recentInspections'
+            ));
+        }
+
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | QUALITY MANAGER DASHBOARD
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->hasRole(\App\UserRole::QUALITY_MANAGER)) {
+
+            $company = $user->company;
+
+            if (!$company) {
+                return view('dashboard', [
+                    'dashboardRole' => 'quality_manager',
+                    'user' => $user,
+                    'company' => null,
+                ]);
+            }
+
+            $companyId = $company->id;
+
+            // Dataset Monitoring
+            $totalDatasets = \App\Models\Dataset::where('company_id', $companyId)->count();
+
+            $validatedDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->where('validation_status', 'passed')->count();
+
+            $pendingDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->where('validation_status', 'pending')->count();
+
+            // Prediction Monitoring
+            $totalPredictions = \App\Models\Prediction::where('company_id', $companyId)->count();
+
+            $completedPredictions = \App\Models\Prediction::where('company_id', $companyId)
+                ->where('status', 'completed')->count();
+
+            $failedPredictions = \App\Models\Prediction::where('company_id', $companyId)
+                ->where('status', 'failed')->count();
+
+            // Defect Oversight
+            $totalDefects = \App\Models\Defect::where('company_id', $companyId)->count();
+
+            $openDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->whereIn('status', ['open', 'investigating'])->count();
+
+            $criticalDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->whereIn('severity', ['high', 'critical'])
+                ->whereIn('status', ['open', 'investigating'])->count();
+
+            // Inspection Monitoring
+            $totalInspections = \App\Models\Inspection::where('company_id', $companyId)->count();
+
+            $completedInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->where('status', 'completed')->count();
+
+            $failedInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->where('result', 'fail')->count();
+
+            // Recent Company Activity
+            $recentDatasets = \App\Models\Dataset::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $recentPredictions = \App\Models\Prediction::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $recentDefects = \App\Models\Defect::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $recentInspections = \App\Models\Inspection::where('company_id', $companyId)
+                ->latest()->take(5)->get();
+
+            $dashboardRole = 'quality_manager';
+            
+            return view('dashboard', compact(
+                'user',
+                'company',
+                'dashboardRole',
+                'totalDatasets',
+                'validatedDatasets',
+                'pendingDatasets',
+                'totalPredictions',
+                'completedPredictions',
+                'failedPredictions',
+                'totalDefects',
+                'openDefects',
+                'criticalDefects',
+                'totalInspections',
+                'completedInspections',
+                'failedInspections',
+                'recentDatasets',
+                'recentPredictions',
                 'recentDefects',
                 'recentInspections'
             ));

@@ -1893,6 +1893,124 @@
 
 
 
+            @elseif (auth()->user()->hasRole(\App\UserRole::QUALITY_MANAGER))
+
+            {{-- QUALITY MANAGER DASHBOARD --}}
+
+            <div class="qf-qm-dashboard">
+
+                <div class="qf-qm-header">
+                    <span class="qf-qm-eyebrow">
+                        <i class="bi bi-shield-check"></i>
+                        QUALITY MANAGEMENT INTELLIGENCE
+                    </span>
+
+                    <h1 class="qf-qm-title">
+                        Welcome back, {{ $user->name }}!
+                    </h1>
+
+                    <p class="qf-qm-subtitle">
+                        Monitor company-wide quality performance, predictions,
+                        defects and inspection activities.
+                    </p>
+                </div>
+
+                @if($company)
+
+                <div class="qf-qm-company">
+                    <strong>Company:</strong> {{ $company->name }}
+                    <span style="float:right;">Read-only Monitoring</span>
+                </div>
+
+                <div class="qf-qm-grid">
+
+                    <div class="qf-qm-card">
+                        <h3><i class="bi bi-database"></i> Dataset Overview</h3>
+                        <p>Total Datasets: <strong>{{ $totalDatasets }}</strong></p>
+                        <p>Validated: <strong>{{ $validatedDatasets }}</strong></p>
+                        <p>Pending Validation: <strong>{{ $pendingDatasets }}</strong></p>
+                    </div>
+
+                    <div class="qf-qm-card">
+                        <h3><i class="bi bi-graph-up-arrow"></i> Prediction Monitoring</h3>
+                        <p>Total Predictions: <strong>{{ $totalPredictions }}</strong></p>
+                        <p>Completed: <strong>{{ $completedPredictions }}</strong></p>
+                        <p>Failed: <strong>{{ $failedPredictions }}</strong></p>
+                    </div>
+
+                    <div class="qf-qm-card">
+                        <h3><i class="bi bi-exclamation-triangle"></i> Defect Oversight</h3>
+                        <p>Total Defects: <strong>{{ $totalDefects }}</strong></p>
+                        <p>Open / Investigating: <strong>{{ $openDefects }}</strong></p>
+                        <p>High / Critical Open: <strong>{{ $criticalDefects }}</strong></p>
+                    </div>
+
+                    <div class="qf-qm-card">
+                        <h3><i class="bi bi-clipboard-check"></i> Inspection Monitoring</h3>
+                        <p>Total Inspections: <strong>{{ $totalInspections }}</strong></p>
+                        <p>Completed: <strong>{{ $completedInspections }}</strong></p>
+                        <p>Failed: <strong>{{ $failedInspections }}</strong></p>
+                    </div>
+
+                </div>
+
+                <div style="margin-top:28px;">
+                    <h2 style="font-size:18px;font-weight:750;margin-bottom:15px;">
+                        Recent Quality Activity
+                    </h2>
+
+                    <div class="qf-qm-grid">
+
+                        <div class="qf-qm-card">
+                            <h3><i class="bi bi-database"></i> Recent Datasets</h3>
+                            @forelse($recentDatasets as $dataset)
+                            <p>{{ $dataset->name }}</p>
+                            @empty
+                            <p>No datasets available.</p>
+                            @endforelse
+                        </div>
+
+                        <div class="qf-qm-card">
+                            <h3><i class="bi bi-graph-up"></i> Recent Predictions</h3>
+                            @forelse($recentPredictions as $prediction)
+                            <p>Prediction #{{ $prediction->id }} — {{ ucfirst($prediction->status) }}</p>
+                            @empty
+                            <p>No predictions available.</p>
+                            @endforelse
+                        </div>
+
+                        <div class="qf-qm-card">
+                            <h3><i class="bi bi-exclamation-triangle"></i> Recent Defects</h3>
+                            @forelse($recentDefects as $defect)
+                            <p>{{ $defect->defect_type }} — {{ ucfirst($defect->severity) }}</p>
+                            @empty
+                            <p>No defects available.</p>
+                            @endforelse
+                        </div>
+
+                        <div class="qf-qm-card">
+                            <h3><i class="bi bi-clipboard-check"></i> Recent Inspections</h3>
+                            @forelse($recentInspections as $inspection)
+                            <p>{{ $inspection->inspection_number }} — {{ ucfirst($inspection->status) }}</p>
+                            @empty
+                            <p>No inspections available.</p>
+                            @endforelse
+                        </div>
+
+                    </div>
+                </div>
+
+                @else
+
+                <div class="qf-qm-card">
+                    <p>No company is assigned to your account. Please contact your Company Administrator.</p>
+                </div>
+
+                @endif
+
+            </div>
+
+
             @else
 
             {{-- =====================================================
