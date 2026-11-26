@@ -15,6 +15,7 @@ use App\Http\Controllers\QualityEngineer\AlertController;
 use App\Http\Controllers\QualityEngineer\RootCauseAnalysisController;
 use App\Http\Controllers\QualityEngineer\QualityReportController;
 use App\Http\Controllers\QualityManager\DatasetOverviewController;
+use App\Http\Controllers\QualityManager\PredictionMonitoringController;
 
 
 
@@ -156,6 +157,14 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             Route::get('/datasets/{id}', [DatasetOverviewController::class, 'show'])
                 ->whereNumber('id')
                 ->name('datasets.show');
+
+            // Prediction Monitoring - Read Only
+            Route::get('/predictions', [PredictionMonitoringController::class, 'index'])
+                ->name('predictions.index');
+
+            Route::get('/predictions/{id}', [PredictionMonitoringController::class, 'show'])
+                ->whereNumber('id')
+                ->name('predictions.show');
         });
 
 
