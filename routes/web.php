@@ -16,6 +16,7 @@ use App\Http\Controllers\QualityEngineer\RootCauseAnalysisController;
 use App\Http\Controllers\QualityEngineer\QualityReportController;
 use App\Http\Controllers\QualityManager\DatasetOverviewController;
 use App\Http\Controllers\QualityManager\PredictionMonitoringController;
+use App\Http\Controllers\QualityManager\DefectOversightController;
 
 
 
@@ -165,6 +166,14 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             Route::get('/predictions/{id}', [PredictionMonitoringController::class, 'show'])
                 ->whereNumber('id')
                 ->name('predictions.show');
+
+            // Defect Oversight - Read Only
+            Route::get('/defects', [DefectOversightController::class, 'index'])
+                ->name('defects.index');
+
+            Route::get('/defects/{id}', [DefectOversightController::class, 'show'])
+                ->whereNumber('id')
+                ->name('defects.show');
         });
 
 
