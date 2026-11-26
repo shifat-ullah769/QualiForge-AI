@@ -67,8 +67,9 @@ class QualityReportController extends Controller
                 $selectedFactory->id
             );
 
-            $predictionQuery->whereHas('dataset', function ($query) use ($selectedFactory) {
-                $query->where('factory_id', $selectedFactory->id);
+            $predictionQuery->whereHas('dataset', function ($query) use ($selectedFactory, $companyId) {
+                $query->where('company_id', $companyId)
+                    ->where('factory_id', $selectedFactory->id);
             });
         }
 
