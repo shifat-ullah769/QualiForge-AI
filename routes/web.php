@@ -19,6 +19,7 @@ use App\Http\Controllers\QualityManager\PredictionMonitoringController;
 use App\Http\Controllers\QualityManager\DefectOversightController;
 use App\Http\Controllers\QualityManager\InspectionMonitoringController;
 use App\Http\Controllers\QualityManager\QualityAnalyticsController;
+use App\Http\Controllers\QualityManager\QualityReportController as QualityManagerReportController;
 
 
 
@@ -188,6 +189,13 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
 
             Route::get('/analytics', [QualityAnalyticsController::class, 'index'])
                 ->name('analytics.index');
+
+
+            Route::get('/reports', [QualityManagerReportController::class, 'index'])
+                ->name('reports.index');
+
+            Route::get('/reports/download', [QualityManagerReportController::class, 'download'])
+                ->name('reports.download');
         });
 
 
