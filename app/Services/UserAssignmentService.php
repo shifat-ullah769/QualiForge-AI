@@ -6,6 +6,7 @@ use App\Models\Factory;
 use App\Models\Machine;
 use App\Models\ProductionLine;
 use App\Models\User;
+use App\UserRole;
 use Illuminate\Validation\ValidationException;
 
 class UserAssignmentService
@@ -23,9 +24,14 @@ class UserAssignmentService
             $companyId && $userId &&
             User::whereKey($userId)
                 ->where('company_id', $companyId)
+                ->where('is_active', true)
+                ->whereIn('role', [
+                    UserRole::QUALITY_ENGINEER->value,
+                    UserRole::PRODUCTION_SUPERVISOR->value,
+                ])
                 ->exists(),
             'user_id',
-            'The selected user does not belong to this company.'
+            'The selected user must be an active Quality Engineer or Production Supervisor in this company.'
         );
 
         $this->ensure(

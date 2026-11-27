@@ -137,7 +137,7 @@
 
             .qf-as-table {
                 width: 100%;
-                min-width: 900px;
+                min-width: 1000px;
                 border-collapse: collapse;
             }
 
@@ -174,6 +174,25 @@
                 color: #cbd5e1;
             }
 
+            .qf-as-role {
+                display: inline-block;
+                margin-top: 5px;
+                padding: 4px 8px;
+                border-radius: 5px;
+                font-size: 10px;
+                font-weight: 600;
+            }
+
+            .qf-as-role.qe {
+                background: rgba(34,211,238,.12);
+                color: #67e8f9;
+            }
+
+            .qf-as-role.ps {
+                background: rgba(168,85,247,.13);
+                color: #c4b5fd;
+            }
+
             .qf-as-end-btn {
                 padding: 7px 11px;
                 border: 1px solid rgba(220,38,38,.4);
@@ -204,7 +223,7 @@
             <div class="qf-as-header">
                 <div>
                     <h1>User Assignments</h1>
-                    <p>Assign Quality Engineers to factories, production lines and machines.</p>
+                    <p>Assign Quality Engineers and Production Supervisors to factories, production lines and machines.</p>
                 </div>
 
                 <a href="{{ route('dashboard') }}" class="qf-as-back">
@@ -238,7 +257,7 @@
             <div class="qf-as-card">
                 <h2>Create New Assignment</h2>
                 <p class="qf-as-description">
-                    Select an active Quality Engineer and assign a production scope.
+                    Select an active Quality Engineer or Production Supervisor and assign a production scope.
                 </p>
 
                 <form method="POST" action="{{ route('company-admin.assignments.store') }}">
@@ -247,13 +266,15 @@
                     <div class="qf-as-grid">
 
                         <div class="qf-as-field">
-                            <label>Quality Engineer *</label>
+                            <label>Operational User *</label>
                             <select name="user_id" required>
-                                <option value="">Select Quality Engineer</option>
+                                <option value="">Select User</option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->id }}"
                                         @selected(old('user_id') == $user->id)>
-                                        {{ $user->name }} ({{ $user->email }})
+                                        {{ $user->name }}
+                                        — {{ $user->role?->value === 'production_supervisor' ? 'Production Supervisor' : 'Quality Engineer' }}
+                                        ({{ $user->email }})
                                     </option>
                                 @endforeach
                             </select>
@@ -326,7 +347,8 @@
                         <table class="qf-as-table">
                             <thead>
                                 <tr>
-                                    <th>Quality Engineer</th>
+                                    <th>Operational User</th>
+                                    <th>Role</th>
                                     <th>Factory</th>
                                     <th>Production Line</th>
                                     <th>Machine</th>
@@ -342,6 +364,16 @@
                                     <tr>
                                         <td>
                                             <strong>{{ $assignment->user?->name ?? 'Unknown' }}</strong>
+                                        </td>
+
+                                        <td>
+                                            @if($assignment->user?->role?->value === 'production_supervisor')
+                                                <span class="qf-as-role ps">Production Supervisor</span>
+                                            @elseif($assignment->user?->role?->value === 'quality_engineer')
+                                                <span class="qf-as-role qe">Quality Engineer</span>
+                                            @else
+                                                <span class="qf-as-role">Other</span>
+                                            @endif
                                         </td>
 
                                         <td>{{ $assignment->factory?->name ?? '—' }}</td>

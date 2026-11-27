@@ -9,6 +9,7 @@ use App\Models\ProductionLine;
 use App\Models\User;
 use App\Models\UserAssignment;
 use App\Services\UserAssignmentService;
+use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -21,8 +22,13 @@ class UserAssignmentController extends Controller
 
         abort_unless($companyId, 403);
 
+        $eligibleRoles = [
+            UserRole::QUALITY_ENGINEER->value,
+            UserRole::PRODUCTION_SUPERVISOR->value,
+        ];
+
         $users = User::where('company_id', $companyId)
-            ->where('role', 'quality_engineer')
+            ->whereIn('role', $eligibleRoles)
             ->where('is_active', true)
             ->orderBy('name')
             ->get();
@@ -64,13 +70,18 @@ class UserAssignmentController extends Controller
 
         abort_unless($companyId, 403);
 
+        $eligibleRoles = [
+            UserRole::QUALITY_ENGINEER->value,
+            UserRole::PRODUCTION_SUPERVISOR->value,
+        ];
+
         $validated = $request->validate([
             'user_id' => [
                 'required',
                 'integer',
                 Rule::exists('users', 'id')
                     ->where('company_id', $companyId)
-                    ->where('role', 'quality_engineer')
+                    ->whereIn('role', $eligibleRoles)
                     ->where('is_active', true),
             ],
             'factory_id' => [
