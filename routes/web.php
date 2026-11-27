@@ -20,7 +20,7 @@ use App\Http\Controllers\QualityManager\DefectOversightController;
 use App\Http\Controllers\QualityManager\InspectionMonitoringController;
 use App\Http\Controllers\QualityManager\QualityAnalyticsController;
 use App\Http\Controllers\QualityManager\QualityReportController as QualityManagerReportController;
-
+use App\Http\Controllers\ProductionSupervisor\ProductionMonitoringController;
 
 
 
@@ -50,7 +50,7 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
 
     /*
 |--------------------------------------------------------------------------
-| Quality Engineer - Dataset Management
+| Quality Engineer 
 |--------------------------------------------------------------------------
 */
 
@@ -198,6 +198,23 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
                 ->name('reports.download');
         });
 
+
+
+
+    /*
+|--------------------------------------------------------------------------
+| Production Supervisor - Production Monitoring
+|--------------------------------------------------------------------------
+*/
+
+    Route::middleware('role:production_supervisor')
+        ->prefix('production-supervisor')
+        ->name('production-supervisor.')
+        ->group(function () {
+
+            Route::get('/monitoring', [ProductionMonitoringController::class, 'index'])
+                ->name('monitoring.index');
+        });
 
     /*
     |--------------------------------------------------------------------------
