@@ -21,6 +21,7 @@ use App\Http\Controllers\QualityManager\InspectionMonitoringController;
 use App\Http\Controllers\QualityManager\QualityAnalyticsController;
 use App\Http\Controllers\QualityManager\QualityReportController as QualityManagerReportController;
 use App\Http\Controllers\ProductionSupervisor\ProductionMonitoringController;
+use App\Http\Controllers\ProductionSupervisor\CorrectiveActionController;
 
 
 
@@ -212,9 +213,23 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
         ->name('production-supervisor.')
         ->group(function () {
 
+            // Production & Machine Monitoring
             Route::get('/monitoring', [ProductionMonitoringController::class, 'index'])
                 ->name('monitoring.index');
+
+            // Corrective Action Register
+            Route::get('/corrective-actions', [CorrectiveActionController::class, 'index'])
+                ->name('corrective-actions.index');
+
+            Route::get('/corrective-actions/create', [CorrectiveActionController::class, 'create'])
+                ->name('corrective-actions.create');
+
+            Route::post('/corrective-actions', [CorrectiveActionController::class, 'store'])
+                ->name('corrective-actions.store');
         });
+
+
+
 
     /*
     |--------------------------------------------------------------------------
