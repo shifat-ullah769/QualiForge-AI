@@ -2298,6 +2298,17 @@
             </style>
 
 
+            @elseif (auth()->user()->hasRole(\App\UserRole::PRODUCTION_SUPERVISOR))
+
+            {{-- PRODUCTION SUPERVISOR DASHBOARD --}}
+            <div class="qf-ps-dashboard">
+                <h1>Production Supervisor Dashboard</h1>
+            </div>
+
+
+
+
+
             @else
 
             {{-- =====================================================

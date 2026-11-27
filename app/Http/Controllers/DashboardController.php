@@ -304,6 +304,36 @@ class DashboardController extends Controller
         }
 
 
+
+
+        /*
+|--------------------------------------------------------------------------
+| PRODUCTION SUPERVISOR DASHBOARD
+|--------------------------------------------------------------------------
+*/
+
+        if ($user->hasRole(\App\UserRole::PRODUCTION_SUPERVISOR)) {
+
+            $company = $user->company;
+
+            $assignments = $user->assignments()
+                ->with([
+                    'factory',
+                    'productionLine',
+                    'machine',
+                ])
+                ->where('status', 'active')
+                ->get();
+
+            return view('dashboard', compact(
+                'user',
+                'company',
+                'assignments'
+            ));
+        }
+
+
+
         /*
         |--------------------------------------------------------------------------
         | COMPANY ADMINISTRATOR DASHBOARD
