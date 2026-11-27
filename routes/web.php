@@ -22,6 +22,7 @@ use App\Http\Controllers\QualityManager\QualityAnalyticsController;
 use App\Http\Controllers\QualityManager\QualityReportController as QualityManagerReportController;
 use App\Http\Controllers\ProductionSupervisor\ProductionMonitoringController;
 use App\Http\Controllers\ProductionSupervisor\CorrectiveActionController;
+use App\Http\Controllers\ProductionSupervisor\CorrectiveActionEvidenceController;
 
 
 
@@ -231,6 +232,22 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
                 '/corrective-actions/{correctiveAction}/execution',
                 [CorrectiveActionController::class, 'updateExecution']
             )->name('corrective-actions.execution.update');
+
+
+            Route::post(
+                '/corrective-actions/{correctiveAction}/evidence',
+                [CorrectiveActionEvidenceController::class, 'store']
+            )->name('corrective-actions.evidence.store');
+
+            Route::get(
+                '/corrective-action-evidence/{evidence}/download',
+                [CorrectiveActionEvidenceController::class, 'download']
+            )->name('corrective-actions.evidence.download');
+
+            Route::delete(
+                '/corrective-action-evidence/{evidence}',
+                [CorrectiveActionEvidenceController::class, 'destroy']
+            )->name('corrective-actions.evidence.destroy');
         });
 
 

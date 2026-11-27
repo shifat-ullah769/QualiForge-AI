@@ -18,7 +18,7 @@ class CorrectiveActionController extends Controller
 
         $actions = CorrectiveAction::where('company_id', $user->company_id)
             ->where('recorded_by', $user->id)
-            ->with(['factory', 'productionLine', 'machine'])
+            ->with(['factory', 'productionLine', 'machine', 'evidences'])
             ->latest()
             ->paginate(10);
 

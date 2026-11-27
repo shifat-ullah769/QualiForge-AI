@@ -52,4 +52,9 @@ class CorrectiveAction extends Model
     {
         return $this->belongsTo(User::class, 'recorded_by');
     }
+
+    public function evidences(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CorrectiveActionEvidence::class);
+    }
 }
