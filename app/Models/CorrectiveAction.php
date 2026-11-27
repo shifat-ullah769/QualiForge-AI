@@ -17,6 +17,7 @@ class CorrectiveAction extends Model
         'priority',
         'due_date',
         'status',
+        'execution_notes',
         'recorded_by',
     ];
 

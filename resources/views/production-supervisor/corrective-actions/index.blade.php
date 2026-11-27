@@ -10,17 +10,17 @@
                 </div>
 
                 <a href="{{ route('production-supervisor.corrective-actions.create') }}"
-                   class="ps-register-create">
+                    class="ps-register-create">
                     <i class="bi bi-plus-lg"></i>
                     Record Corrective Action
                 </a>
             </div>
 
             @if (session('success'))
-                <div class="ps-register-success">
-                    <i class="bi bi-check-circle"></i>
-                    {{ session('success') }}
-                </div>
+            <div class="ps-register-success">
+                <i class="bi bi-check-circle"></i>
+                {{ session('success') }}
+            </div>
             @endif
 
             <div class="ps-register-summary">
@@ -47,91 +47,157 @@
 
                 @forelse ($actions as $action)
 
-                    <div class="ps-action-card">
+                <div class="ps-action-card">
 
-                        <div class="ps-action-card-header">
-                            <div>
-                                <span class="ps-action-reference">
-                                    ACTION #{{ $action->id }}
-                                </span>
-                                <h3>{{ $action->title }}</h3>
-                            </div>
-
-                            <div class="ps-action-badges">
-                                <span class="ps-priority {{ $action->priority }}">
-                                    {{ ucfirst($action->priority) }} Priority
-                                </span>
-
-                                <span class="ps-action-status {{ $action->status }}">
-                                    {{ ucwords(str_replace('_', ' ', $action->status)) }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <p class="ps-action-instruction">
-                            {{ $action->instruction }}
-                        </p>
-
-                        <div class="ps-action-metadata">
-
-                            <div>
-                                <span><i class="bi bi-buildings"></i> Factory</span>
-                                <strong>{{ $action->factory?->name ?? 'N/A' }}</strong>
-                            </div>
-
-                            <div>
-                                <span><i class="bi bi-diagram-3"></i> Production Line</span>
-                                <strong>{{ $action->productionLine?->name ?? 'Not specified' }}</strong>
-                            </div>
-
-                            <div>
-                                <span><i class="bi bi-gear"></i> Machine</span>
-                                <strong>{{ $action->machine?->name ?? 'Not specified' }}</strong>
-                            </div>
-
-                            <div>
-                                <span><i class="bi bi-calendar-event"></i> Due Date</span>
-                                <strong>{{ $action->due_date?->format('d M Y') ?? 'Not set' }}</strong>
-                            </div>
-
-                        </div>
-
-                        <div class="ps-action-card-footer">
-                            <span>
-                                <i class="bi bi-clock"></i>
-                                Recorded {{ $action->created_at->format('d M Y') }}
+                    <div class="ps-action-card-header">
+                        <div>
+                            <span class="ps-action-reference">
+                                ACTION #{{ $action->id }}
                             </span>
-                            <span>Execution status will be updated during the next phase.</span>
+                            <h3>{{ $action->title }}</h3>
+                        </div>
+
+                        <div class="ps-action-badges">
+                            <span class="ps-priority {{ $action->priority }}">
+                                {{ ucfirst($action->priority) }} Priority
+                            </span>
+
+                            <span class="ps-action-status {{ $action->status }}">
+                                {{ ucwords(str_replace('_', ' ', $action->status)) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="ps-action-instruction">
+                        {{ $action->instruction }}
+                    </p>
+
+                    <div class="ps-action-metadata">
+
+                        <div>
+                            <span><i class="bi bi-buildings"></i> Factory</span>
+                            <strong>{{ $action->factory?->name ?? 'N/A' }}</strong>
+                        </div>
+
+                        <div>
+                            <span><i class="bi bi-diagram-3"></i> Production Line</span>
+                            <strong>{{ $action->productionLine?->name ?? 'Not specified' }}</strong>
+                        </div>
+
+                        <div>
+                            <span><i class="bi bi-gear"></i> Machine</span>
+                            <strong>{{ $action->machine?->name ?? 'Not specified' }}</strong>
+                        </div>
+
+                        <div>
+                            <span><i class="bi bi-calendar-event"></i> Due Date</span>
+                            <strong>{{ $action->due_date?->format('d M Y') ?? 'Not set' }}</strong>
                         </div>
 
                     </div>
+
+
+                    <form
+                        action="{{ route('production-supervisor.corrective-actions.execution.update', $action) }}"
+                        method="POST"
+                        class="ps-execution-form">
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="ps-execution-heading">
+                            <div>
+                                <span class="ps-register-label">EXECUTION MANAGEMENT</span>
+                                <h4>Update Execution Progress</h4>
+                            </div>
+                        </div>
+
+                        <div class="ps-execution-fields">
+                            <div class="ps-execution-field">
+                                <label for="status-{{ $action->id }}">Execution Status</label>
+
+                                <select
+                                    id="status-{{ $action->id }}"
+                                    name="status"
+                                    required>
+                                    <option value="pending" @selected($action->status === 'pending')>
+                                        Pending
+                                    </option>
+                                    <option value="in_progress" @selected($action->status === 'in_progress')>
+                                        In Progress
+                                    </option>
+                                    <option value="completed" @selected($action->status === 'completed')>
+                                        Completed
+                                    </option>
+                                </select>
+
+                                @error('status')
+                                <small class="ps-execution-error">{{ $message }}</small>
+                                @enderror
+                            </div>
+
+                            <div class="ps-execution-field">
+                                <label for="notes-{{ $action->id }}">Execution Notes</label>
+
+                                <textarea
+                                    id="notes-{{ $action->id }}"
+                                    name="execution_notes"
+                                    rows="3"
+                                    maxlength="5000"
+                                    placeholder="Describe the work performed and its current progress...">{{ old('execution_notes', $action->execution_notes) }}</textarea>
+
+                                @error('execution_notes')
+                                <small class="ps-execution-error">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="ps-execution-footer">
+                            <span>Record the actual execution progress.</span>
+
+                            <button type="submit" class="ps-execution-save">
+                                <i class="bi bi-check2-circle"></i>
+                                Save Progress
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="ps-action-card-footer">
+                        <span>
+                            <i class="bi bi-clock"></i>
+                            Recorded {{ $action->created_at->format('d M Y') }}
+                        </span>
+                        <span>Execution updates are recorded by the assigned Production Supervisor.</span>
+                    </div>
+
+
+                </div>
 
                 @empty
 
-                    <div class="ps-register-empty">
-                        <div class="ps-register-empty-icon">
-                            <i class="bi bi-clipboard2-check"></i>
-                        </div>
-
-                        <h3>No Corrective Actions Yet</h3>
-                        <p>
-                            Record an instruction received from the Quality Manager
-                            to begin tracking its execution.
-                        </p>
-
-                        <a href="{{ route('production-supervisor.corrective-actions.create') }}"
-                           class="ps-register-create">
-                            <i class="bi bi-plus-lg"></i>
-                            Record First Action
-                        </a>
+                <div class="ps-register-empty">
+                    <div class="ps-register-empty-icon">
+                        <i class="bi bi-clipboard2-check"></i>
                     </div>
+
+                    <h3>No Corrective Actions Yet</h3>
+                    <p>
+                        Record an instruction received from the Quality Manager
+                        to begin tracking its execution.
+                    </p>
+
+                    <a href="{{ route('production-supervisor.corrective-actions.create') }}"
+                        class="ps-register-create">
+                        <i class="bi bi-plus-lg"></i>
+                        Record First Action
+                    </a>
+                </div>
 
                 @endforelse
 
                 @if ($actions->hasPages())
-                    <div class="ps-register-pagination">
-                        {{ $actions->links() }}
-                    </div>
+                <div class="ps-register-pagination">
+                    {{ $actions->links() }}
+                </div>
                 @endif
 
             </div>
@@ -150,7 +216,7 @@
 
             min-height: calc(100vh - 64px);
             padding: 32px 24px 55px;
-            background: radial-gradient(circle at 5% 5%, rgba(34,211,238,.07), transparent 28%), var(--bg);
+            background: radial-gradient(circle at 5% 5%, rgba(34, 211, 238, .07), transparent 28%), var(--bg);
             color: var(--text);
         }
 
@@ -217,7 +283,7 @@
             margin-bottom: 30px;
         }
 
-        .ps-register-summary > div {
+        .ps-register-summary>div {
             padding: 19px;
             border: 1px solid var(--border);
             border-radius: 11px;
@@ -270,7 +336,7 @@
             margin-bottom: 15px;
             border: 1px solid var(--border);
             border-radius: 11px;
-            background: rgba(7,17,31,.55);
+            background: rgba(7, 17, 31, .55);
         }
 
         .ps-action-card-header {
@@ -314,32 +380,32 @@
 
         .ps-priority.low {
             color: #cbd5e1;
-            background: rgba(148,163,184,.12);
+            background: rgba(148, 163, 184, .12);
         }
 
         .ps-priority.medium {
             color: #fbbf24;
-            background: rgba(245,158,11,.12);
+            background: rgba(245, 158, 11, .12);
         }
 
         .ps-priority.high {
             color: #f87171;
-            background: rgba(239,68,68,.12);
+            background: rgba(239, 68, 68, .12);
         }
 
         .ps-action-status.pending {
             color: #cbd5e1;
-            background: rgba(148,163,184,.12);
+            background: rgba(148, 163, 184, .12);
         }
 
         .ps-action-status.in_progress {
             color: #67e8f9;
-            background: rgba(34,211,238,.12);
+            background: rgba(34, 211, 238, .12);
         }
 
         .ps-action-status.completed {
             color: #4ade80;
-            background: rgba(34,197,94,.12);
+            background: rgba(34, 197, 94, .12);
         }
 
         .ps-action-instruction {
@@ -347,7 +413,7 @@
             padding: 13px;
             border-left: 2px solid var(--cyan);
             border-radius: 0 7px 7px 0;
-            background: rgba(34,211,238,.045);
+            background: rgba(34, 211, 238, .045);
             color: #cbd5e1;
             font-size: 12px;
             line-height: 1.7;
@@ -361,7 +427,7 @@
             gap: 17px;
         }
 
-        .ps-action-metadata > div {
+        .ps-action-metadata>div {
             min-width: 0;
         }
 
@@ -387,7 +453,7 @@
             gap: 10px;
             margin-top: 18px;
             padding-top: 13px;
-            border-top: 1px solid rgba(148,163,184,.13);
+            border-top: 1px solid rgba(148, 163, 184, .13);
             color: var(--muted);
             font-size: 10px;
         }
@@ -430,12 +496,120 @@
             gap: 10px;
             margin-bottom: 20px;
             padding: 13px 16px;
-            border: 1px solid rgba(34,197,94,.25);
+            border: 1px solid rgba(34, 197, 94, .25);
             border-radius: 9px;
-            background: rgba(34,197,94,.08);
+            background: rgba(34, 197, 94, .08);
             color: #4ade80;
             font-size: 12px;
         }
+
+
+        .ps-execution-form {
+            margin-top: 20px;
+            padding: 18px;
+            border: 1px solid rgba(34, 211, 238, .2);
+            border-radius: 10px;
+            background: rgba(14, 28, 46, .75);
+        }
+
+        .ps-execution-heading h4 {
+            margin: 6px 0 16px;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .ps-execution-fields {
+            display: grid;
+            grid-template-columns: 220px minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        .ps-execution-field {
+            min-width: 0;
+        }
+
+        .ps-execution-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .ps-execution-field select,
+        .ps-execution-field textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: #07111f;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .ps-execution-field textarea {
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .ps-execution-field select:focus,
+        .ps-execution-field textarea:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, .1);
+        }
+
+        .ps-execution-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .ps-execution-footer>span {
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .ps-execution-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border: 0;
+            border-radius: 7px;
+            background: var(--cyan);
+            color: #07111f;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .ps-execution-save:hover {
+            background: #67e8f9;
+        }
+
+        .ps-execution-error {
+            display: block;
+            margin-top: 6px;
+            color: #f87171;
+            font-size: 10px;
+        }
+
+        @media(max-width: 600px) {
+            .ps-execution-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .ps-execution-footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
 
         @media(max-width: 850px) {
             .ps-action-metadata {
@@ -444,18 +618,42 @@
         }
 
         @media(max-width: 600px) {
-            .ps-register-page { padding: 25px 14px; }
+            .ps-register-page {
+                padding: 25px 14px;
+            }
+
             .ps-register-header {
                 align-items: flex-start;
                 flex-direction: column;
             }
-            .ps-register-header h1 { font-size: 23px; }
-            .ps-register-summary { grid-template-columns: 1fr 1fr; }
-            .ps-register-section { padding: 16px; }
-            .ps-action-card-header { flex-direction: column; }
-            .ps-action-badges { justify-content: flex-start; }
-            .ps-action-metadata { grid-template-columns: 1fr 1fr; }
-            .ps-action-card-footer { flex-direction: column; }
+
+            .ps-register-header h1 {
+                font-size: 23px;
+            }
+
+            .ps-register-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ps-register-section {
+                padding: 16px;
+            }
+
+            .ps-action-card-header {
+                flex-direction: column;
+            }
+
+            .ps-action-badges {
+                justify-content: flex-start;
+            }
+
+            .ps-action-metadata {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ps-action-card-footer {
+                flex-direction: column;
+            }
         }
     </style>
 </x-app-layout>

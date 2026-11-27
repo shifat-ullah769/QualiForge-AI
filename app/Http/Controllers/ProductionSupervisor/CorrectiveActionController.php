@@ -59,23 +59,11 @@ class CorrectiveActionController extends Controller
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | 1. Verify Factory Ownership
-        |--------------------------------------------------------------------------
-        */
-
         $factoryExists = Factory::where('id', $validated['factory_id'])
             ->where('company_id', $user->company_id)
             ->exists();
 
         abort_unless($factoryExists, 403);
-
-        /*
-        |--------------------------------------------------------------------------
-        | 2. Verify Production Line Hierarchy
-        |--------------------------------------------------------------------------
-        */
 
         if (!empty($validated['production_line_id'])) {
             $lineExists = ProductionLine::where(
@@ -89,19 +77,8 @@ class CorrectiveActionController extends Controller
             abort_unless($lineExists, 403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 3. Verify Machine Hierarchy
-        |--------------------------------------------------------------------------
-        */
-
         if (!empty($validated['machine_id'])) {
-
-            // A machine must belong to the selected production line.
-            abort_unless(
-                !empty($validated['production_line_id']),
-                422
-            );
+            abort_unless(!empty($validated['production_line_id']), 422);
 
             $machineExists = Machine::where('id', $validated['machine_id'])
                 ->where('company_id', $user->company_id)
@@ -111,12 +88,6 @@ class CorrectiveActionController extends Controller
             abort_unless($machineExists, 403);
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | 4. Verify Active Assignment Scope
-        |--------------------------------------------------------------------------
-        */
-
         $assignments = $user->assignments()
             ->where('company_id', $user->company_id)
             ->where('factory_id', $validated['factory_id'])
@@ -124,21 +95,16 @@ class CorrectiveActionController extends Controller
             ->get();
 
         $authorized = $assignments->contains(function ($assignment) use ($validated) {
-
-            // A line-specific assignment cannot select another line.
             if (
                 $assignment->production_line_id !== null &&
-                (int) $assignment->production_line_id !==
-                    (int) ($validated['production_line_id'] ?? 0)
+                (int) $assignment->production_line_id !== (int) ($validated['production_line_id'] ?? 0)
             ) {
                 return false;
             }
 
-            // A machine-specific assignment cannot select another machine.
             if (
                 $assignment->machine_id !== null &&
-                (int) $assignment->machine_id !==
-                    (int) ($validated['machine_id'] ?? 0)
+                (int) $assignment->machine_id !== (int) ($validated['machine_id'] ?? 0)
             ) {
                 return false;
             }
@@ -147,12 +113,6 @@ class CorrectiveActionController extends Controller
         });
 
         abort_unless($authorized, 403);
-
-        /*
-        |--------------------------------------------------------------------------
-        | 5. Create Corrective Action
-        |--------------------------------------------------------------------------
-        */
 
         CorrectiveAction::create([
             'company_id' => $user->company_id,
@@ -170,5 +130,60 @@ class CorrectiveActionController extends Controller
         return redirect()
             ->route('production-supervisor.corrective-actions.index')
             ->with('success', 'Corrective action recorded successfully.');
+    }
+
+    public function updateExecution(Request $request, CorrectiveAction $correctiveAction)
+    {
+        $user = $request->user();
+
+        abort_unless(
+            $correctiveAction->company_id === $user->company_id &&
+            $correctiveAction->recorded_by === $user->id,
+            404
+        );
+
+        $assignment = $user->assignments()
+            ->where('company_id', $user->company_id)
+            ->where('factory_id', $correctiveAction->factory_id)
+            ->where('status', 'active')
+            ->get()
+            ->contains(function ($assignment) use ($correctiveAction) {
+                if (
+                    $assignment->production_line_id !== null &&
+                    (int) $assignment->production_line_id !==
+                        (int) $correctiveAction->production_line_id
+                ) {
+                    return false;
+                }
+
+                if (
+                    $assignment->machine_id !== null &&
+                    (int) $assignment->machine_id !==
+                        (int) $correctiveAction->machine_id
+                ) {
+                    return false;
+                }
+
+                return true;
+            });
+
+        abort_unless($assignment, 403);
+
+        $validated = $request->validate([
+            'status' => [
+                'required',
+                Rule::in(['pending', 'in_progress', 'completed']),
+            ],
+            'execution_notes' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $correctiveAction->update([
+            'status' => $validated['status'],
+            'execution_notes' => $validated['execution_notes'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('production-supervisor.corrective-actions.index')
+            ->with('success', 'Execution progress updated successfully.');
     }
 }

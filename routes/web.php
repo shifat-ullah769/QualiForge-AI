@@ -226,6 +226,11 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
 
             Route::post('/corrective-actions', [CorrectiveActionController::class, 'store'])
                 ->name('corrective-actions.store');
+
+            Route::patch(
+                '/corrective-actions/{correctiveAction}/execution',
+                [CorrectiveActionController::class, 'updateExecution']
+            )->name('corrective-actions.execution.update');
         });
 
 
