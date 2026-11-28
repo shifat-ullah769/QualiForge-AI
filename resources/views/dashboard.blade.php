@@ -2300,10 +2300,970 @@
 
             @elseif (auth()->user()->hasRole(\App\UserRole::PRODUCTION_SUPERVISOR))
 
+
             {{-- PRODUCTION SUPERVISOR DASHBOARD --}}
+
             <div class="qf-ps-dashboard">
-                <h1>Production Supervisor Dashboard</h1>
+
+                {{-- Header --}}
+                <section class="qf-ps-header">
+                    <div>
+                        <span class="qf-ps-eyebrow">
+                            <i class="bi bi-speedometer2"></i>
+                            PRODUCTION OPERATIONS
+                        </span>
+
+                        <h1>Welcome back, {{ $user->name }}!</h1>
+
+                        <p>
+                            Monitor your assigned resources, manage corrective actions
+                            and report operational issues.
+                        </p>
+                    </div>
+
+                    <div class="qf-ps-header-badge">
+                        <i class="bi bi-person-workspace"></i>
+                        Production Supervisor
+                    </div>
+                </section>
+
+                @if($company)
+
+                {{-- Company Information --}}
+                <div class="qf-ps-company">
+                    <div>
+                        <i class="bi bi-building"></i>
+                        <span>Company</span>
+                        <strong>{{ $company->name }}</strong>
+                    </div>
+
+                    <span class="qf-ps-company-label">
+                        <i class="bi bi-check-circle"></i>
+                        Assigned Workspace
+                    </span>
+                </div>
+
+                {{-- Assigned Resources --}}
+                <section class="qf-ps-section">
+
+                    <div class="qf-ps-section-heading">
+                        <div>
+                            <span class="qf-ps-section-label">YOUR RESPONSIBILITY</span>
+                            <h2>Assigned Resources</h2>
+                        </div>
+
+                        <a href="{{ route('production-supervisor.monitoring.index') }}">
+                            View Monitoring <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="qf-ps-resource-summary">
+                        <div class="qf-ps-summary-item">
+                            <i class="bi bi-buildings"></i>
+                            <div>
+                                <strong>{{ $assignedFactories }}</strong>
+                                <span>Factories</span>
+                            </div>
+                        </div>
+
+                        <div class="qf-ps-summary-item">
+                            <i class="bi bi-diagram-3"></i>
+                            <div>
+                                <strong>{{ $assignedLines }}</strong>
+                                <span>Production Lines</span>
+                            </div>
+                        </div>
+
+                        <div class="qf-ps-summary-item">
+                            <i class="bi bi-cpu"></i>
+                            <div>
+                                <strong>{{ $assignedMachines }}</strong>
+                                <span>Machines</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qf-ps-resource-grid">
+
+                        @forelse($assignments as $assignment)
+
+                        <div class="qf-ps-resource-card">
+
+                            <div class="qf-ps-resource-icon">
+                                <i class="bi bi-cpu"></i>
+                            </div>
+
+                            <div class="qf-ps-resource-details">
+                                <span class="qf-ps-resource-label">ASSIGNED MACHINE</span>
+
+                                <h3>
+                                    {{ $assignment->machine->name ?? 'Machine not specified' }}
+                                </h3>
+
+                                <p>
+                                    <i class="bi bi-building"></i>
+                                    {{ $assignment->factory->name ?? 'Factory not specified' }}
+                                </p>
+
+                                <p>
+                                    <i class="bi bi-diagram-3"></i>
+                                    {{ $assignment->productionLine->name ?? 'Production line not specified' }}
+                                </p>
+                            </div>
+
+                            <span class="qf-ps-active-status">Active Assignment</span>
+
+                        </div>
+
+                        @empty
+
+                        <div class="qf-ps-empty">
+                            <i class="bi bi-inbox"></i>
+                            <p>No active resource assignments are available.</p>
+                            <span>Contact your Company Administrator for assignment.</span>
+                        </div>
+
+                        @endforelse
+
+                    </div>
+                </section>
+
+                {{-- Corrective Action Overview --}}
+                <section class="qf-ps-section">
+
+                    <div class="qf-ps-section-heading">
+                        <div>
+                            <span class="qf-ps-section-label">ACTION EXECUTION</span>
+                            <h2>Corrective Action Overview</h2>
+                        </div>
+
+                        <a href="{{ route('production-supervisor.corrective-actions.index') }}">
+                            View All Actions <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="qf-ps-stat-grid">
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon cyan">
+                                <i class="bi bi-clipboard-data"></i>
+                            </div>
+                            <span>Total Actions</span>
+                            <strong>{{ $totalActions }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon amber">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                            <span>Pending</span>
+                            <strong>{{ $pendingActions }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon blue">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </div>
+                            <span>In Progress</span>
+                            <strong>{{ $inProgressActions }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon green">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <span>Completed</span>
+                            <strong>{{ $completedActions }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon red">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+                            <span>Overdue</span>
+                            <strong>{{ $overdueActions }}</strong>
+                        </div>
+
+                    </div>
+                </section>
+
+                {{-- Operational Issues --}}
+                <section class="qf-ps-section">
+
+                    <div class="qf-ps-section-heading">
+                        <div>
+                            <span class="qf-ps-section-label">OPERATIONAL REPORTING</span>
+                            <h2>Operational Issues</h2>
+                        </div>
+
+                        <a href="{{ route('production-supervisor.operational-issues.index') }}">
+                            View All Issues <i class="bi bi-arrow-up-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="qf-ps-stat-grid qf-ps-issue-grid">
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon cyan">
+                                <i class="bi bi-exclamation-circle"></i>
+                            </div>
+                            <span>Total Issues</span>
+                            <strong>{{ $totalIssues }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon amber">
+                                <i class="bi bi-flag"></i>
+                            </div>
+                            <span>Reported</span>
+                            <strong>{{ $reportedIssues }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon blue">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <span>Under Review</span>
+                            <strong>{{ $underReviewIssues }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon green">
+                                <i class="bi bi-check2-circle"></i>
+                            </div>
+                            <span>Resolved</span>
+                            <strong>{{ $resolvedIssues }}</strong>
+                        </div>
+
+                        <div class="qf-ps-stat-card">
+                            <div class="qf-ps-stat-icon red">
+                                <i class="bi bi-shield-exclamation"></i>
+                            </div>
+                            <span>High / Critical Open</span>
+                            <strong>{{ $criticalIssues }}</strong>
+                        </div>
+
+                    </div>
+                </section>
+
+                {{-- Recent Activity --}}
+                <section class="qf-ps-section">
+
+                    <div class="qf-ps-section-heading">
+                        <div>
+                            <span class="qf-ps-section-label">LATEST UPDATES</span>
+                            <h2>Recent Activity</h2>
+                        </div>
+                    </div>
+
+                    <div class="qf-ps-activity-grid">
+
+                        <div class="qf-ps-activity-card">
+                            <h3>
+                                <i class="bi bi-clipboard-check"></i>
+                                Recent Corrective Actions
+                            </h3>
+
+                            @forelse($recentActions as $action)
+
+                            <div class="qf-ps-activity-item">
+                                <div>
+                                    <strong>{{ $action->title }}</strong>
+                                    <span>
+                                        {{ $action->created_at->format('d M Y') }}
+                                        @if($action->due_date)
+                                        · Due {{ \Illuminate\Support\Carbon::parse($action->due_date)->format('d M Y') }}
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <span class="qf-ps-status qf-ps-status-{{ $action->status }}">
+                                    {{ ucfirst(str_replace('_', ' ', $action->status)) }}
+                                </span>
+                            </div>
+
+                            @empty
+
+                            <div class="qf-ps-activity-empty">
+                                No corrective actions recorded yet.
+                            </div>
+
+                            @endforelse
+                        </div>
+
+                        <div class="qf-ps-activity-card">
+                            <h3>
+                                <i class="bi bi-exclamation-triangle"></i>
+                                Recent Operational Issues
+                            </h3>
+
+                            @forelse($recentIssues as $issue)
+
+                            <div class="qf-ps-activity-item">
+                                <div>
+                                    <strong>{{ $issue->title }}</strong>
+                                    <span>
+                                        {{ ucfirst(str_replace('_', ' ', $issue->issue_type)) }}
+                                        · {{ $issue->created_at->format('d M Y') }}
+                                    </span>
+                                </div>
+
+                                <span class="qf-ps-status qf-ps-status-{{ $issue->status }}">
+                                    {{ ucfirst(str_replace('_', ' ', $issue->status)) }}
+                                </span>
+                            </div>
+
+                            @empty
+
+                            <div class="qf-ps-activity-empty">
+                                No operational issues reported yet.
+                            </div>
+
+                            @endforelse
+                        </div>
+
+                    </div>
+                </section>
+
+                {{-- Quick Access --}}
+                <section class="qf-ps-section qf-ps-quick-section">
+
+                    <div class="qf-ps-section-heading">
+                        <div>
+                            <span class="qf-ps-section-label">WORKSPACE NAVIGATION</span>
+                            <h2>Quick Access</h2>
+                        </div>
+                    </div>
+
+                    <div class="qf-ps-quick-grid">
+
+                        <a href="{{ route('production-supervisor.monitoring.index') }}"
+                            class="qf-ps-quick-card">
+                            <i class="bi bi-cpu"></i>
+                            <div>
+                                <strong>Production & Machine Monitoring</strong>
+                                <span>View your assigned production resources</span>
+                            </div>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                        <a href="{{ route('production-supervisor.corrective-actions.index') }}"
+                            class="qf-ps-quick-card">
+                            <i class="bi bi-clipboard-check"></i>
+                            <div>
+                                <strong>Corrective Action Register</strong>
+                                <span>Record and track corrective actions</span>
+                            </div>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                        <a href="{{ route('production-supervisor.corrective-actions.create') }}"
+                            class="qf-ps-quick-card">
+                            <i class="bi bi-plus-circle"></i>
+                            <div>
+                                <strong>Record New Action</strong>
+                                <span>Register an externally received instruction</span>
+                            </div>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                        <a href="{{ route('production-supervisor.operational-issues.index') }}"
+                            class="qf-ps-quick-card">
+                            <i class="bi bi-exclamation-diamond"></i>
+                            <div>
+                                <strong>Operational Issues</strong>
+                                <span>View and update reported issues</span>
+                            </div>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                        <a href="{{ route('production-supervisor.operational-issues.create') }}"
+                            class="qf-ps-quick-card">
+                            <i class="bi bi-plus-square"></i>
+                            <div>
+                                <strong>Report an Issue</strong>
+                                <span>Report a machine or operational problem</span>
+                            </div>
+                            <i class="bi bi-arrow-up-right"></i>
+                        </a>
+
+                    </div>
+                </section>
+
+                <div class="qf-ps-note">
+                    <i class="bi bi-info-circle"></i>
+                    Machine information reflects saved administrative records.
+                    Live sensor telemetry and real-time machine diagnostics are not connected.
+                </div>
+
+                @else
+
+                <div class="qf-ps-empty">
+                    <i class="bi bi-building-exclamation"></i>
+                    <p>No company is assigned to your account.</p>
+                    <span>Please contact your Company Administrator.</span>
+                </div>
+
+                @endif
+
             </div>
+
+            <style>
+                .qf-ps-dashboard {
+                    width: 100%;
+                    max-width: 1450px;
+                    margin: 0 auto;
+                    padding: 12px 0 35px;
+                    color: #f8fafc;
+                }
+
+                .qf-ps-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 20px;
+                    margin-bottom: 25px;
+                    padding: 30px;
+                    border: 1px solid rgba(34, 211, 238, .16);
+                    border-radius: 16px;
+                    background: linear-gradient(120deg, #10283b, #0c1729 75%);
+                }
+
+                .qf-ps-eyebrow,
+                .qf-ps-section-label {
+                    color: #22d3ee;
+                    font-size: 10px;
+                    font-weight: 800;
+                    letter-spacing: 1.5px;
+                }
+
+                .qf-ps-header h1 {
+                    margin: 10px 0 7px;
+                    color: #f8fafc;
+                    font-size: 28px;
+                    font-weight: 750;
+                }
+
+                .qf-ps-header p {
+                    margin: 0;
+                    color: #9fb1c5;
+                    font-size: 13px;
+                    line-height: 1.7;
+                }
+
+                .qf-ps-header-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 9px;
+                    padding: 11px 15px;
+                    border: 1px solid rgba(34, 211, 238, .22);
+                    border-radius: 9px;
+                    background: rgba(8, 145, 178, .12);
+                    color: #67e8f9;
+                    font-size: 12px;
+                    font-weight: 700;
+                    white-space: nowrap;
+                }
+
+                .qf-ps-company {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+                    margin-bottom: 30px;
+                    padding: 16px 20px;
+                    border: 1px solid rgba(148, 163, 184, .13);
+                    border-radius: 10px;
+                    background: #101c2d;
+                }
+
+                .qf-ps-company>div {
+                    display: flex;
+                    align-items: center;
+                    gap: 11px;
+                    color: #94a3b8;
+                    font-size: 12px;
+                }
+
+                .qf-ps-company>div i {
+                    color: #22d3ee;
+                    font-size: 18px;
+                }
+
+                .qf-ps-company strong {
+                    color: #f1f5f9;
+                    font-size: 13px;
+                }
+
+                .qf-ps-company-label {
+                    color: #67e8f9;
+                    font-size: 11px;
+                    font-weight: 700;
+                }
+
+                .qf-ps-section {
+                    margin-bottom: 32px;
+                }
+
+                .qf-ps-section-heading {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: end;
+                    gap: 15px;
+                    margin-bottom: 16px;
+                }
+
+                .qf-ps-section-heading h2 {
+                    margin: 5px 0 0;
+                    color: #f1f5f9;
+                    font-size: 19px;
+                    font-weight: 750;
+                }
+
+                .qf-ps-section-heading>a {
+                    color: #67e8f9;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-decoration: none;
+                }
+
+                .qf-ps-section-heading>a:hover {
+                    color: #a5f3fc;
+                }
+
+                .qf-ps-resource-summary {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 14px;
+                    margin-bottom: 15px;
+                }
+
+                .qf-ps-summary-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 17px 19px;
+                    border: 1px solid rgba(148, 163, 184, .13);
+                    border-radius: 11px;
+                    background: #101c2d;
+                }
+
+                .qf-ps-summary-item>i {
+                    color: #22d3ee;
+                    font-size: 23px;
+                }
+
+                .qf-ps-summary-item div {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 3px;
+                }
+
+                .qf-ps-summary-item strong {
+                    color: #f8fafc;
+                    font-size: 21px;
+                }
+
+                .qf-ps-summary-item span {
+                    color: #94a3b8;
+                    font-size: 11px;
+                }
+
+                .qf-ps-resource-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 14px;
+                }
+
+                .qf-ps-resource-card {
+                    position: relative;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 15px;
+                    padding: 21px;
+                    border: 1px solid rgba(34, 211, 238, .15);
+                    border-radius: 12px;
+                    background: #101c2d;
+                }
+
+                .qf-ps-resource-icon {
+                    display: grid;
+                    place-items: center;
+                    flex-shrink: 0;
+                    width: 43px;
+                    height: 43px;
+                    border-radius: 10px;
+                    background: rgba(8, 145, 178, .15);
+                    color: #67e8f9;
+                    font-size: 21px;
+                }
+
+                .qf-ps-resource-details {
+                    min-width: 0;
+                }
+
+                .qf-ps-resource-label {
+                    color: #22d3ee;
+                    font-size: 9px;
+                    font-weight: 800;
+                    letter-spacing: 1px;
+                }
+
+                .qf-ps-resource-details h3 {
+                    margin: 6px 0 12px;
+                    color: #f8fafc;
+                    font-size: 15px;
+                    font-weight: 700;
+                    overflow-wrap: anywhere;
+                }
+
+                .qf-ps-resource-details p {
+                    margin: 5px 0;
+                    color: #94a3b8;
+                    font-size: 11px;
+                    overflow-wrap: anywhere;
+                }
+
+                .qf-ps-resource-details p i {
+                    margin-right: 6px;
+                    color: #22d3ee;
+                }
+
+                .qf-ps-active-status {
+                    position: absolute;
+                    top: 16px;
+                    right: 15px;
+                    color: #86efac;
+                    font-size: 9px;
+                    font-weight: 700;
+                }
+
+                .qf-ps-stat-grid {
+                    display: grid;
+                    grid-template-columns: repeat(5, minmax(0, 1fr));
+                    gap: 13px;
+                }
+
+                .qf-ps-stat-card {
+                    min-width: 0;
+                    padding: 19px;
+                    border: 1px solid rgba(148, 163, 184, .13);
+                    border-radius: 11px;
+                    background: #101c2d;
+                }
+
+                .qf-ps-stat-icon {
+                    display: grid;
+                    place-items: center;
+                    width: 37px;
+                    height: 37px;
+                    margin-bottom: 15px;
+                    border-radius: 9px;
+                    font-size: 17px;
+                }
+
+                .qf-ps-stat-icon.cyan {
+                    background: rgba(8, 145, 178, .16);
+                    color: #67e8f9;
+                }
+
+                .qf-ps-stat-icon.amber {
+                    background: rgba(217, 119, 6, .15);
+                    color: #fbbf24;
+                }
+
+                .qf-ps-stat-icon.blue {
+                    background: rgba(59, 130, 246, .15);
+                    color: #93c5fd;
+                }
+
+                .qf-ps-stat-icon.green {
+                    background: rgba(22, 163, 74, .15);
+                    color: #86efac;
+                }
+
+                .qf-ps-stat-icon.red {
+                    background: rgba(220, 38, 38, .15);
+                    color: #fca5a5;
+                }
+
+                .qf-ps-stat-card>span {
+                    display: block;
+                    min-height: 30px;
+                    color: #94a3b8;
+                    font-size: 11px;
+                    line-height: 1.5;
+                }
+
+                .qf-ps-stat-card>strong {
+                    display: block;
+                    margin-top: 7px;
+                    color: #f8fafc;
+                    font-size: 27px;
+                    font-weight: 750;
+                }
+
+                .qf-ps-activity-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 15px;
+                }
+
+                .qf-ps-activity-card {
+                    padding: 21px;
+                    border: 1px solid rgba(148, 163, 184, .13);
+                    border-radius: 12px;
+                    background: #101c2d;
+                }
+
+                .qf-ps-activity-card h3 {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin: 0 0 17px;
+                    color: #e2e8f0;
+                    font-size: 14px;
+                    font-weight: 700;
+                }
+
+                .qf-ps-activity-card h3 i {
+                    color: #22d3ee;
+                    font-size: 18px;
+                }
+
+                .qf-ps-activity-item {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 13px 0;
+                    border-top: 1px solid rgba(148, 163, 184, .10);
+                }
+
+                .qf-ps-activity-item>div {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    min-width: 0;
+                }
+
+                .qf-ps-activity-item strong {
+                    color: #e2e8f0;
+                    font-size: 12px;
+                    overflow-wrap: anywhere;
+                }
+
+                .qf-ps-activity-item>div span {
+                    color: #8495aa;
+                    font-size: 10px;
+                }
+
+                .qf-ps-status {
+                    flex-shrink: 0;
+                    padding: 6px 9px;
+                    border-radius: 6px;
+                    background: rgba(148, 163, 184, .12);
+                    color: #cbd5e1;
+                    font-size: 9px;
+                    font-weight: 700;
+                }
+
+                .qf-ps-status-pending,
+                .qf-ps-status-reported {
+                    background: rgba(217, 119, 6, .13);
+                    color: #fbbf24;
+                }
+
+                .qf-ps-status-in_progress,
+                .qf-ps-status-under_review {
+                    background: rgba(59, 130, 246, .13);
+                    color: #93c5fd;
+                }
+
+                .qf-ps-status-completed,
+                .qf-ps-status-resolved {
+                    background: rgba(22, 163, 74, .13);
+                    color: #86efac;
+                }
+
+                .qf-ps-activity-empty {
+                    padding: 20px 0;
+                    border-top: 1px solid rgba(148, 163, 184, .10);
+                    color: #8495aa;
+                    font-size: 12px;
+                }
+
+                .qf-ps-quick-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 13px;
+                }
+
+                .qf-ps-quick-card {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                    padding: 17px;
+                    border: 1px solid rgba(34, 211, 238, .13);
+                    border-radius: 11px;
+                    background: #101c2d;
+                    color: inherit;
+                    text-decoration: none;
+                    transition: border-color .2s, transform .2s;
+                }
+
+                .qf-ps-quick-card:hover {
+                    border-color: rgba(34, 211, 238, .5);
+                    transform: translateY(-2px);
+                    color: inherit;
+                }
+
+                .qf-ps-quick-card>i:first-child {
+                    color: #22d3ee;
+                    font-size: 22px;
+                }
+
+                .qf-ps-quick-card>div {
+                    display: flex;
+                    flex: 1;
+                    flex-direction: column;
+                    gap: 5px;
+                    min-width: 0;
+                }
+
+                .qf-ps-quick-card strong {
+                    color: #e2e8f0;
+                    font-size: 12px;
+                }
+
+                .qf-ps-quick-card span {
+                    color: #8495aa;
+                    font-size: 10px;
+                    line-height: 1.5;
+                }
+
+                .qf-ps-quick-card>i:last-child {
+                    color: #64748b;
+                    font-size: 14px;
+                }
+
+                .qf-ps-note {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 10px;
+                    padding: 14px 17px;
+                    border: 1px solid rgba(34, 211, 238, .13);
+                    border-radius: 9px;
+                    background: rgba(8, 145, 178, .07);
+                    color: #94a3b8;
+                    font-size: 11px;
+                    line-height: 1.7;
+                }
+
+                .qf-ps-note i {
+                    color: #22d3ee;
+                    font-size: 15px;
+                }
+
+                .qf-ps-empty {
+                    padding: 35px 20px;
+                    border: 1px dashed rgba(148, 163, 184, .25);
+                    border-radius: 12px;
+                    background: #101c2d;
+                    text-align: center;
+                }
+
+                .qf-ps-empty>i {
+                    color: #22d3ee;
+                    font-size: 28px;
+                }
+
+                .qf-ps-empty p {
+                    margin: 12px 0 5px;
+                    color: #e2e8f0;
+                    font-size: 14px;
+                    font-weight: 700;
+                }
+
+                .qf-ps-empty span {
+                    color: #8495aa;
+                    font-size: 11px;
+                }
+
+                @media (max-width: 1050px) {
+                    .qf-ps-stat-grid {
+                        grid-template-columns: repeat(3, minmax(0, 1fr));
+                    }
+                }
+
+                @media (max-width: 750px) {
+                    .qf-ps-header {
+                        align-items: flex-start;
+                        flex-direction: column;
+                        padding: 23px;
+                    }
+
+                    .qf-ps-resource-grid,
+                    .qf-ps-activity-grid,
+                    .qf-ps-quick-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .qf-ps-stat-grid {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .qf-ps-dashboard {
+                        padding-top: 5px;
+                    }
+
+                    .qf-ps-header h1 {
+                        font-size: 23px;
+                    }
+
+                    .qf-ps-company {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .qf-ps-resource-summary {
+                        gap: 8px;
+                    }
+
+                    .qf-ps-summary-item {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 7px;
+                        padding: 13px;
+                    }
+
+                    .qf-ps-stat-grid {
+                        gap: 9px;
+                    }
+
+                    .qf-ps-stat-card {
+                        padding: 14px;
+                    }
+
+                    .qf-ps-section-heading {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .qf-ps-activity-item {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .qf-ps-active-status {
+                        position: static;
+                        margin-left: auto;
+                    }
+                }
+            </style>
+
 
 
 

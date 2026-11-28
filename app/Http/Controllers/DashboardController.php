@@ -312,25 +312,89 @@ class DashboardController extends Controller
 |--------------------------------------------------------------------------
 */
 
+
+
         if ($user->hasRole(\App\UserRole::PRODUCTION_SUPERVISOR)) {
 
             $company = $user->company;
+            $companyId = $user->company_id;
 
+            // Active assigned resources
             $assignments = $user->assignments()
-                ->with([
-                    'factory',
-                    'productionLine',
-                    'machine',
-                ])
+                ->with(['factory', 'productionLine', 'machine'])
+                ->where('company_id', $companyId)
                 ->where('status', 'active')
+                ->get();
+
+            $assignedFactories = $assignments->pluck('factory_id')->unique()->count();
+            $assignedLines = $assignments->pluck('production_line_id')->filter()->unique()->count();
+            $assignedMachines = $assignments->pluck('machine_id')->filter()->unique()->count();
+
+            // Corrective Action Overview
+            $actions = \App\Models\CorrectiveAction::where('company_id', $companyId)
+                ->where('recorded_by', $user->id);
+
+            $totalActions = (clone $actions)->count();
+            $pendingActions = (clone $actions)->where('status', 'pending')->count();
+            $inProgressActions = (clone $actions)->where('status', 'in_progress')->count();
+            $completedActions = (clone $actions)->where('status', 'completed')->count();
+
+            $overdueActions = (clone $actions)
+                ->whereNotNull('due_date')
+                ->whereDate('due_date', '<', today())
+                ->where('status', '!=', 'completed')
+                ->count();
+
+            // Operational Issue Overview
+            $issues = \App\Models\OperationalIssue::where('company_id', $companyId)
+                ->where('reported_by', $user->id);
+
+            $totalIssues = (clone $issues)->count();
+            $reportedIssues = (clone $issues)->where('status', 'reported')->count();
+            $underReviewIssues = (clone $issues)->where('status', 'under_review')->count();
+            $resolvedIssues = (clone $issues)->where('status', 'resolved')->count();
+
+            $criticalIssues = (clone $issues)
+                ->whereIn('severity', ['high', 'critical'])
+                ->whereIn('status', ['reported', 'under_review'])
+                ->count();
+
+            // Recent Activity
+            $recentActions = \App\Models\CorrectiveAction::where('company_id', $companyId)
+                ->where('recorded_by', $user->id)
+                ->latest()
+                ->take(5)
+                ->get();
+
+            $recentIssues = \App\Models\OperationalIssue::where('company_id', $companyId)
+                ->where('reported_by', $user->id)
+                ->latest()
+                ->take(5)
                 ->get();
 
             return view('dashboard', compact(
                 'user',
                 'company',
-                'assignments'
+                'assignments',
+                'assignedFactories',
+                'assignedLines',
+                'assignedMachines',
+                'totalActions',
+                'pendingActions',
+                'inProgressActions',
+                'completedActions',
+                'overdueActions',
+                'totalIssues',
+                'reportedIssues',
+                'underReviewIssues',
+                'resolvedIssues',
+                'criticalIssues',
+                'recentActions',
+                'recentIssues'
             ));
         }
+
+
 
 
 
