@@ -120,6 +120,7 @@ class OperationalIssueController extends Controller
         if (!empty($validated['production_line_id'])) {
             $lineExists = \App\Models\ProductionLine::query()
                 ->where('id', $validated['production_line_id'])
+                ->where('company_id', $user->company_id)
                 ->where('factory_id', $validated['factory_id'])
                 ->exists();
 
@@ -170,7 +171,7 @@ class OperationalIssueController extends Controller
 
         abort_unless(
             $operationalIssue->company_id === $user->company_id
-            && $operationalIssue->reported_by === $user->id,
+                && $operationalIssue->reported_by === $user->id,
             404
         );
 

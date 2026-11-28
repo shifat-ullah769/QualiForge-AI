@@ -137,7 +137,15 @@ class CorrectiveActionEvidenceController extends Controller
 
         $this->authorizeAction($request, $action);
 
-        Storage::disk('local')->delete($evidence->file_path);
+        $disk = Storage::disk('local');
+
+        if ($disk->exists($evidence->file_path)) {
+            abort_unless(
+                $disk->delete($evidence->file_path),
+                500,
+                'Evidence file could not be deleted.'
+            );
+        }
 
         $evidence->delete();
 
