@@ -134,10 +134,7 @@ class CompanyManagementController extends Controller
     {
         $user = request()->user();
 
-        if (
-            $user->hasRole(\App\UserRole::COMPANY_ADMINISTRATOR) &&
-            (int) $user->company_id !== (int) $company->id
-        ) {
+        if (!$user->hasRole(\App\UserRole::SYSTEM_ADMINISTRATOR)) {
             abort(403);
         }
 

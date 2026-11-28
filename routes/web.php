@@ -335,6 +335,7 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
             ->name('companies.update');
 
         Route::patch('/companies/{company}/toggle-status', [CompanyManagementController::class, 'toggleStatus'])
+            ->middleware('role:system_administrator')
             ->name('companies.toggle-status');
     });
 

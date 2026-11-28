@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\UserRole;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,14 +14,23 @@ class EnsureUserIsActive
     {
         $user = $request->user();
 
-        if ($user && !$user->is_active) {
+        if (!$user) {
+            return $next($request);
+        }
 
+        $companyIsInactive = !$user->hasRole(UserRole::SYSTEM_ADMINISTRATOR)
+            && (!$user->company || !$user->company->is_active);
+
+        if (!$user->is_active || $companyIsInactive) {
             Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
             return redirect()
                 ->route('login')
                 ->withErrors([
-                    'email' => 'Your account has been deactivated.',
+                    'email' => 'Your account or company has been deactivated.',
                 ]);
         }
 
