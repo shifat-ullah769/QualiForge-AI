@@ -23,6 +23,7 @@ use App\Http\Controllers\QualityManager\QualityReportController as QualityManage
 use App\Http\Controllers\ProductionSupervisor\ProductionMonitoringController;
 use App\Http\Controllers\ProductionSupervisor\CorrectiveActionController;
 use App\Http\Controllers\ProductionSupervisor\CorrectiveActionEvidenceController;
+use App\Http\Controllers\ProductionSupervisor\OperationalIssueController;
 
 
 
@@ -248,6 +249,20 @@ Route::middleware(['auth', 'active', 'absolute'])->group(function () {
                 '/corrective-action-evidence/{evidence}',
                 [CorrectiveActionEvidenceController::class, 'destroy']
             )->name('corrective-actions.evidence.destroy');
+
+
+            // Operational Issues
+            Route::get('/operational-issues', [OperationalIssueController::class, 'index'])
+                ->name('operational-issues.index');
+
+            Route::get('/operational-issues/create', [OperationalIssueController::class, 'create'])
+                ->name('operational-issues.create');
+
+            Route::post('/operational-issues', [OperationalIssueController::class, 'store'])
+                ->name('operational-issues.store');
+
+            Route::patch('/operational-issues/{operationalIssue}/status', [OperationalIssueController::class, 'updateStatus'])
+                ->name('operational-issues.status.update');
         });
 
 
